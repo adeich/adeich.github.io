@@ -1,0 +1,88 @@
+# Configs for aaron deich 
+
+title: "Aaron Deich"
+name: "Aarpm Deich"
+#email: peter@pwills.com
+#url: "http://www.pwills.com"
+#repository: "peterewills/peterewills.github.io"
+
+include:
+  - _pages
+  - assets
+  - index.html
+exclude:
+  - TODO.md
+  - README.md
+
+plugins:
+  - jekyll-feed
+  - jekyll-remote-theme
+  - jekyll-include-cache
+  - jekyll-paginate
+
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-minimal
+#remote_theme: "mmistakes/minimal-mistakes"
+#minimal_mistakes_skin: "contrast"
+  
+# settings for author profile
+author:
+  name   : "Aaron Deich"
+#  avatar : "/assets/images/headshot.jpg"
+  bio    : "this is my bio"
+  location: "San Francisco, CA"
+#  github : peterewills
+#  linkedin: peterewills
+#  email  : peter@pwills.comg
+
+
+# # comments by disqus (can't get this to work)
+# comments:
+#   provider: "disqus"
+#   disqus:
+#     shortname: "pwills-com"
+
+#analytics:
+#  provider: "google"
+#  google:
+#    tracking_id: "UA-116208936-1"
+
+
+# pagination for blog page
+paginate: 5 # number of posts to show
+#paginate_path: /page:num/
+
+# default YAML front matter
+defaults:
+  # all
+  - scope:
+      path: ""
+    values:
+      layout: single
+      mathjax: true
+      author_profile: false
+      class: wide
+      title: " "
+      title_separator: "|"
+  # posts
+  - scope:
+      type: posts
+    values:
+      toc: true
+      toc_label: "Contents"
+      read_time: false
+  # portfolio
+  - scope:
+      path: ""
+      type: portfolio
+    values:
+      author_profile: false
+      excerpt: ""
+      sidebar:
+        nav: "portfolio"
+
+# collections
+collections:
+  portfolio:
+    output: true
