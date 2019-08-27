@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>How safe is it to park over the time limit? | Aaron Deich</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="How safe is it to park over the time limit?" />
+<meta name="author" content="Aaron Deich" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Summary of ticketing predictions For a 2-hour time limit, assuming the parking checkers come by every 30 minutes and have a moderate imprecision to how consistent they keep this periodicity. Depending on model parameters, these values vary only by about 10%." />
+<meta property="og:description" content="Summary of ticketing predictions For a 2-hour time limit, assuming the parking checkers come by every 30 minutes and have a moderate imprecision to how consistent they keep this periodicity. Depending on model parameters, these values vary only by about 10%." />
+<link rel="canonical" href="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html" />
+<meta property="og:url" content="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html" />
+<meta property="og:site_name" content="Aaron Deich" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-08-12T00:00:00-07:00" />
+<script type="application/ld+json">
+{"datePublished":"2019-08-12T00:00:00-07:00","dateModified":"2019-08-12T00:00:00-07:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html"},"url":"http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html","author":{"@type":"Person","name":"Aaron Deich"},"description":"Summary of ticketing predictions For a 2-hour time limit, assuming the parking checkers come by every 30 minutes and have a moderate imprecision to how consistent they keep this periodicity. Depending on model parameters, these values vary only by about 10%.","@type":"BlogPosting","headline":"How safe is it to park over the time limit?","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Aaron Deich</a></h1>
+        
+        
+
+        <p></p>
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small>12 August 2019</small>
+<h1>How safe is it to park over the time limit?</h1>
+
+<p class="view">by {"name"=>"Aaron Deich", "bio"=>"this is my bio", "location"=>"San Francisco, CA"}</p>
+
+<h3 id="summary-of-ticketing-predictions">Summary of ticketing predictions</h3>
+<p>For a 2-hour time limit, assuming the parking checkers come by every 30 minutes and have a moderate imprecision to how consistent they keep this periodicity. Depending on model parameters, these values vary only by about 10%.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Probability of ticket</th>
+      <th>Odds of ticket</th>
+      <th>Overstay</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0.01</td>
+      <td>1 in 100</td>
+      <td>4 minutes</td>
+    </tr>
+    <tr>
+      <td>0.05</td>
+      <td>1 in 20</td>
+      <td>10 minutes</td>
+    </tr>
+    <tr>
+      <td>0.10</td>
+      <td>1 in 10</td>
+      <td>15 minutes</td>
+    </tr>
+    <tr>
+      <td>0.25</td>
+      <td>1 in 4</td>
+      <td>25 minutes</td>
+    </tr>
+    <tr>
+      <td>0.50</td>
+      <td>1 in 2</td>
+      <td>45 minutes</td>
+    </tr>
+    <tr>
+      <td>0.75</td>
+      <td>3 in 4</td>
+      <td>75 minutes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In reality, parking checkers may come far more or less frequently; scale these numbers accordingly. For explanation and interesting subtleties of this prediction, see below.</p>
+
+<h3 id="background-for-car-free-readers">Background for car-free readers</h3>
+
+<p>I often park on streets in San Francisco that have a 2-hour time limit. I have tended to be very careful to come retrieve the car by exactly the 2-hour mark, because there’s a $70 ticket (the same order of magnitude as a typical day’s wages), and I’ve so far suffered several of them due to occasional forgetfullness.</p>
+
+<p>But I have recently realized, thanks to a conversation with a friend, that the odds of getting a ticket even just a few minutes outside the 2 hour window are slim. Here, I’ve modelled just how risky it is to park over the time limit by various amounts, and how this depends on the behavior of the parking enforcement professionals.</p>
+
+<p><img src="/images/metervehicle.png" alt="parking vehicle" title="title" class="align-center" /></p>
+
+<p>In order for you to get a ticket after you leave your car, two events need to occur, in this sequence:</p>
+
+<ol>
+  <li>At some time after you’ve parked, a parking-rule checker first arrives, recording your car’s presence.</li>
+  <li>A checker (not necessarily the same one; I suspect they can communicate with each other!) arrives again, at least 2-hours after their first arrival, at which time they give the ticket.</li>
+</ol>
+
+
+
+
+  <small>tags: <em></em></small>
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    
+  </body>
+</html>
