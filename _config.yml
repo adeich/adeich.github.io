@@ -16,7 +16,7 @@ exclude:
 
 plugins:
   - jekyll-feed
-#  - jekyll-remote-theme
+  - jekyll-remote-theme
   - jekyll-include-cache
   - jekyll-paginate
 
@@ -24,7 +24,7 @@ plugins:
 markdown: kramdown
 theme: minimal-mistakes-jekyll 
 #theme: jekyll-theme-minimal
-#remote_theme: "mmistakes/minimal-mistakes"
+remote_theme: "mmistakes/minimal-mistakes"
 minimal_mistakes_skin: "air"
   
 # settings for author profile
