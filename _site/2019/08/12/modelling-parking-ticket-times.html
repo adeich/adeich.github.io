@@ -20,7 +20,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Aaron Deich">
 <meta property="og:title" content="How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation">
-<meta property="og:url" content="/2019/08/12/modelling-parking-ticket-times.html">
+<meta property="og:url" content="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html">
 
 
   <meta property="og:description" content="With careful consideration of model and parameter dependence.">
@@ -38,7 +38,7 @@
 
 
 
-<link rel="canonical" href="/2019/08/12/modelling-parking-ticket-times.html">
+<link rel="canonical" href="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html">
 
 
 
@@ -49,7 +49,7 @@
     
       "@type": "Person",
       "name": null,
-      "url": "/"
+      "url": "http://localhost:4000/"
     
   }
 </script>
@@ -185,7 +185,7 @@
       <li><a href="#the-order-of-events-leading-to-a-ticket">The order of events leading to a ticket.</a></li>
     </ul>
   </li>
-  <li><a href="#modeling-the-visit-times">Modeling the visit times.</a></li>
+  <li><a href="#my-model-of-the-visit-times">My model of the visit times.</a></li>
   <li><a href="#implementation-details">Implementation details</a>
     <ul>
       <li><a href="#inability-to-vectorize-the-arrival-time-loops">Inability to vectorize the arrival time loops</a></li>
@@ -216,12 +216,21 @@
   <li>At the first arrival after the two-hour mark, the ticket is given.</li>
 </ol>
 
-<h2 id="modeling-the-visit-times">Modeling the visit times.</h2>
-<p>My model is characterized entirely by two parameters: mean visit time, <script type="math/tex">\mu</script>, and <script type="math/tex">\sigma</script>, a description of how non-periodic the arrivals are.</p>
+<h2 id="my-model-of-the-visit-times">My model of the visit times.</h2>
+<p>Say that the parking enforcement vehicle (PEV) arrives, on average, every <script type="math/tex">\mu</script> minutes—this is the mean wait time.</p>
+
+<p>The following is my argument for my model, and why it’s plausible:</p>
 
 <ul>
-  <li>Time starts at <em>t=0</em> at the moment you park the car.</li>
-  <li>The time until the first arrival is randomly drawn from a uniform distribution <script type="math/tex">t_0 \sim \mathrm{uniform}[0, \mu]</script>, since the phase of the parking vehicle’s loop is uncorrelated with your own arrival.</li>
+  <li>Time <em>t=0</em> starts at the moment you park the car.</li>
+  <li>If the PEV is traveling with perfect periodicity of <script type="math/tex">T=\mu</script>, then the time until its first arrival, <script type="math/tex">t_0</script>, is randomly drawn from a uniform distribution <script type="math/tex">t_0 \sim \mathrm{uniform}[0, \mu]</script>, since the phase of the parking vehicle’s loop is uncorrelated with your own arrival.</li>
+  <li>However, if the PEV arrives with total non-periodicity, then its arrival time is given by a negative exponential distribution, <script type="math/tex">t_0 \sim e^{\lambda/t}</script>.</li>
+  <li>The combination of these two behaviors—perfectly periodic and perfectly non-periodic—we capture with a weighted sum between the two, where <script type="math/tex">\sigma/\mu</script> is the weight:</li>
+</ul>
+
+<script type="math/tex; mode=display">t_0 = \sigma/\mu (\mathrm{uniform}[0, \mu]) + (1 - \sigma/\mu) (e^{\lambda/t})</script>
+
+<ul>
   <li>Subsequent arrival times are then given by</li>
 </ul>
 
@@ -231,13 +240,17 @@
   <li>where <script type="math/tex">C</script> is the minimum lap time (physically corresponding to duration of the parking enforcement traveling at full speed the whole way around the lap, without stopping to give tickets or for stop signs, etc.). The gamma distribution applies to processes that have a large number <script type="math/tex">(n \gtrapprox 50)</script> of subsequent, exponentially-derived events.</li>
 </ul>
 
-<p>The total time is computed thus:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum = t0() # randomly drawn
-while sum &lt; 120: # minutes
-  sum = sum + t_i()
+<p>The monte carlo simulation thus takes this simple nested loop (pseudocode):</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>N := 10,000
+data := array(length=N)
+for n going from 1 to N:
+  sum := generate_t0() # randomly drawn initial time
+  while sum &lt; 120: # minutes
+    sum := sum + generate_t_i() # randomly drawn subsequent time
+  data[n] := sum   
 </code></pre></div></div>
 
-<p>For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begins to approximate the true <a href="https://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) as <script type="math/tex">N</script>  gets big, according to the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">Law of Large Numbers</a>), starts to stabilize around <script type="math/tex">N > \mathrm{10,000}</script>.</p>
+<p>For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begin to approximate the true <a href="https://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) as <script type="math/tex">N</script>  gets big, according to the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">Law of Large Numbers</a>), starts to stabilize around <script type="math/tex">N > \mathrm{10,000}</script>.</p>
 
 <p>Here is what a typical such histogram looks like:
 <img src="/images/parking_hist_example.png" alt="CDF for long times" title="title" class="align-center" />

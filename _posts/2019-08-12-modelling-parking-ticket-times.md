@@ -21,25 +21,36 @@ To quantify the actual time you can park over the limit for, say, a 1% chance, o
 3. Several intermediate arrivals may occur, but if two hours hasn't passed, nothing changes.
 4. At the first arrival after the two-hour mark, the ticket is given.
 
-## Modeling the visit times.
-My model is characterized entirely by two parameters: mean visit time, $$\mu$$, and $$\sigma$$, a description of how non-periodic the arrivals are.
+## My model of the visit times.
+Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time.
 
-* Time starts at *t=0* at the moment you park the car.
-* The time until the first arrival is randomly drawn from a uniform distribution $$t_0 \sim \mathrm{uniform}[0, \mu]$$, since the phase of the parking vehicle's loop is uncorrelated with your own arrival.
+The following is my argument for my model, and why it's plausible:
+
+* Time *t=0* starts at the moment you park the car.
+* If the PEV is traveling with perfect periodicity of $$T=\mu$$, then the time until its first arrival, $$t_0$$, is randomly drawn from a uniform distribution $$t_0 \sim \mathrm{uniform}[0, \mu]$$, since the phase of the parking vehicle's loop is uncorrelated with your own arrival.
+* However, if the PEV arrives with total non-periodicity, then its arrival time is given by a negative exponential distribution, $$t_0 \sim e^{\lambda/t}$$.
+* The combination of these two behaviors---perfectly periodic and perfectly non-periodic---we capture with a weighted sum between the two, where $$\sigma/\mu$$ is the weight:
+
+$$t_0 = \sigma/\mu (\mathrm{uniform}[0, \mu]) + (1 - \sigma/\mu) (e^{\lambda/t})$$
+
 * Subsequent arrival times are then given by
 
 $$t_i \sim C + \mathrm{gamma}(a, \mu - C, \sigma),$$
 
 * where $$C$$ is the minimum lap time (physically corresponding to duration of the parking enforcement traveling at full speed the whole way around the lap, without stopping to give tickets or for stop signs, etc.). The gamma distribution applies to processes that have a large number $$(n \gtrapprox 50)$$ of subsequent, exponentially-derived events.
 
-The total time is computed thus:
+The monte carlo simulation thus takes this simple nested loop (pseudocode):
 ~~~~
-sum = t0() # randomly drawn
-while sum < 120: # minutes
-  sum = sum + t_i()
+N := 10,000
+data := array(length=N)
+for n going from 1 to N:
+  sum := generate_t0() # randomly drawn initial time
+  while sum < 120: # minutes
+    sum := sum + generate_t_i() # randomly drawn subsequent time
+  data[n] := sum   
 ~~~~
 
-For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begins to approximate the true [probability density function](https://en.wikipedia.org/wiki/Probability_density_function) (pdf) as $$N$$  gets big, according to the [Law of Large Numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers)), starts to stabilize around $$N > \mathrm{10,000}$$.
+For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begin to approximate the true [probability density function](https://en.wikipedia.org/wiki/Probability_density_function) (pdf) as $$N$$  gets big, according to the [Law of Large Numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers)), starts to stabilize around $$N > \mathrm{10,000}$$.
 
 Here is what a typical such histogram looks like:
 ![CDF for long times](/images/parking_hist_example.png 'title'){: .align-center}

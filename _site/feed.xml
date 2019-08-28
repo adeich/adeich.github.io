@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-08-28T14:17:00-07:00</updated><id>/feed.xml</id><title type="html">Aaron Deich</title><subtitle>Statistics and scientific computation basics, written for people with a physics background.</subtitle><author><name>Aaron Deich</name></author><entry><title type="html">How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation</title><link href="/2019/08/12/modelling-parking-ticket-times.html" rel="alternate" type="text/html" title="How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation" /><published>2019-08-12T00:00:00-07:00</published><updated>2019-08-12T00:00:00-07:00</updated><id>/2019/08/12/modelling-parking-ticket-times</id><content type="html" xml:base="/2019/08/12/modelling-parking-ticket-times.html">&lt;p&gt;&lt;strong&gt;With careful consideration of model and parameter dependence.&lt;/strong&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-08-28T14:39:33-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aaron Deich</title><subtitle>Statistics and scientific computation basics, written for people with a physics background.</subtitle><author><name>Aaron Deich</name></author><entry><title type="html">How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation</title><link href="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html" rel="alternate" type="text/html" title="How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation" /><published>2019-08-12T00:00:00-07:00</published><updated>2019-08-12T00:00:00-07:00</updated><id>http://localhost:4000/2019/08/12/modelling-parking-ticket-times</id><content type="html" xml:base="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html">&lt;p&gt;&lt;strong&gt;With careful consideration of model and parameter dependence.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;the-physical-scenario&quot;&gt;The physical scenario&lt;/h2&gt;
 
@@ -17,12 +17,21 @@
   &lt;li&gt;At the first arrival after the two-hour mark, the ticket is given.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&quot;modeling-the-visit-times&quot;&gt;Modeling the visit times.&lt;/h2&gt;
-&lt;p&gt;My model is characterized entirely by two parameters: mean visit time, &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt;, and &lt;script type=&quot;math/tex&quot;&gt;\sigma&lt;/script&gt;, a description of how non-periodic the arrivals are.&lt;/p&gt;
+&lt;h2 id=&quot;my-model-of-the-visit-times&quot;&gt;My model of the visit times.&lt;/h2&gt;
+&lt;p&gt;Say that the parking enforcement vehicle (PEV) arrives, on average, every &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; minutes—this is the mean wait time.&lt;/p&gt;
+
+&lt;p&gt;The following is my argument for my model, and why it’s plausible:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;Time starts at &lt;em&gt;t=0&lt;/em&gt; at the moment you park the car.&lt;/li&gt;
-  &lt;li&gt;The time until the first arrival is randomly drawn from a uniform distribution &lt;script type=&quot;math/tex&quot;&gt;t_0 \sim \mathrm{uniform}[0, \mu]&lt;/script&gt;, since the phase of the parking vehicle’s loop is uncorrelated with your own arrival.&lt;/li&gt;
+  &lt;li&gt;Time &lt;em&gt;t=0&lt;/em&gt; starts at the moment you park the car.&lt;/li&gt;
+  &lt;li&gt;If the PEV is traveling with perfect periodicity of &lt;script type=&quot;math/tex&quot;&gt;T=\mu&lt;/script&gt;, then the time until its first arrival, &lt;script type=&quot;math/tex&quot;&gt;t_0&lt;/script&gt;, is randomly drawn from a uniform distribution &lt;script type=&quot;math/tex&quot;&gt;t_0 \sim \mathrm{uniform}[0, \mu]&lt;/script&gt;, since the phase of the parking vehicle’s loop is uncorrelated with your own arrival.&lt;/li&gt;
+  &lt;li&gt;However, if the PEV arrives with total non-periodicity, then its arrival time is given by a negative exponential distribution, &lt;script type=&quot;math/tex&quot;&gt;t_0 \sim e^{\lambda/t}&lt;/script&gt;.&lt;/li&gt;
+  &lt;li&gt;The combination of these two behaviors—perfectly periodic and perfectly non-periodic—we capture with a weighted sum between the two, where &lt;script type=&quot;math/tex&quot;&gt;\sigma/\mu&lt;/script&gt; is the weight:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;t_0 = \sigma/\mu (\mathrm{uniform}[0, \mu]) + (1 - \sigma/\mu) (e^{\lambda/t})&lt;/script&gt;
+
+&lt;ul&gt;
   &lt;li&gt;Subsequent arrival times are then given by&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -32,13 +41,17 @@
   &lt;li&gt;where &lt;script type=&quot;math/tex&quot;&gt;C&lt;/script&gt; is the minimum lap time (physically corresponding to duration of the parking enforcement traveling at full speed the whole way around the lap, without stopping to give tickets or for stop signs, etc.). The gamma distribution applies to processes that have a large number &lt;script type=&quot;math/tex&quot;&gt;(n \gtrapprox 50)&lt;/script&gt; of subsequent, exponentially-derived events.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The total time is computed thus:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sum = t0() # randomly drawn
-while sum &amp;lt; 120: # minutes
-  sum = sum + t_i()
+&lt;p&gt;The monte carlo simulation thus takes this simple nested loop (pseudocode):&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;N := 10,000
+data := array(length=N)
+for n going from 1 to N:
+  sum := generate_t0() # randomly drawn initial time
+  while sum &amp;lt; 120: # minutes
+    sum := sum + generate_t_i() # randomly drawn subsequent time
+  data[n] := sum   
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begins to approximate the true &lt;a href=&quot;https://en.wikipedia.org/wiki/Probability_density_function&quot;&gt;probability density function&lt;/a&gt; (pdf) as &lt;script type=&quot;math/tex&quot;&gt;N&lt;/script&gt;  gets big, according to the &lt;a href=&quot;https://en.wikipedia.org/wiki/Law_of_large_numbers&quot;&gt;Law of Large Numbers&lt;/a&gt;), starts to stabilize around &lt;script type=&quot;math/tex&quot;&gt;N &gt; \mathrm{10,000}&lt;/script&gt;.&lt;/p&gt;
+&lt;p&gt;For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begin to approximate the true &lt;a href=&quot;https://en.wikipedia.org/wiki/Probability_density_function&quot;&gt;probability density function&lt;/a&gt; (pdf) as &lt;script type=&quot;math/tex&quot;&gt;N&lt;/script&gt;  gets big, according to the &lt;a href=&quot;https://en.wikipedia.org/wiki/Law_of_large_numbers&quot;&gt;Law of Large Numbers&lt;/a&gt;), starts to stabilize around &lt;script type=&quot;math/tex&quot;&gt;N &gt; \mathrm{10,000}&lt;/script&gt;.&lt;/p&gt;
 
 &lt;p&gt;Here is what a typical such histogram looks like:
 &lt;img src=&quot;/images/parking_hist_example.png&quot; alt=&quot;CDF for long times&quot; title=&quot;title&quot; class=&quot;align-center&quot; /&gt;
@@ -104,7 +117,7 @@ Though, as discussed in the results section, below, this is not as useful a repr
 
 &lt;p&gt;In reality, parking checkers may come far more or less frequently; my results scale linearly with your observed measurements of &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\sigma&lt;/script&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/parking_metervehicle.png&quot; alt=&quot;parking vehicle&quot; title=&quot;title&quot; class=&quot;align-center&quot; /&gt;&lt;/p&gt;</content><author><name>Aaron Deich</name></author><summary type="html">With careful consideration of model and parameter dependence.</summary></entry><entry><title type="html">A Title for a New Future</title><link href="/jekyll/update/2019/08/01/welcome-to-jekyll.html" rel="alternate" type="text/html" title="A Title for a New Future" /><published>2019-08-01T14:34:41-07:00</published><updated>2019-08-01T14:34:41-07:00</updated><id>/jekyll/update/2019/08/01/welcome-to-jekyll</id><content type="html" xml:base="/jekyll/update/2019/08/01/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/parking_metervehicle.png&quot; alt=&quot;parking vehicle&quot; title=&quot;title&quot; class=&quot;align-center&quot; /&gt;&lt;/p&gt;</content><author><name>Aaron Deich</name></author><summary type="html">With careful consideration of model and parameter dependence.</summary></entry><entry><title type="html">A Title for a New Future</title><link href="http://localhost:4000/jekyll/update/2019/08/01/welcome-to-jekyll.html" rel="alternate" type="text/html" title="A Title for a New Future" /><published>2019-08-01T14:34:41-07:00</published><updated>2019-08-01T14:34:41-07:00</updated><id>http://localhost:4000/jekyll/update/2019/08/01/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2019/08/01/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
 
 &lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
 
