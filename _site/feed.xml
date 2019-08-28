@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-08-28T14:39:33-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aaron Deich</title><subtitle>Statistics and scientific computation basics, written for people with a physics background.</subtitle><author><name>Aaron Deich</name></author><entry><title type="html">How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation</title><link href="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html" rel="alternate" type="text/html" title="How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation" /><published>2019-08-12T00:00:00-07:00</published><updated>2019-08-12T00:00:00-07:00</updated><id>http://localhost:4000/2019/08/12/modelling-parking-ticket-times</id><content type="html" xml:base="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html">&lt;p&gt;&lt;strong&gt;With careful consideration of model and parameter dependence.&lt;/strong&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-08-28T15:57:15-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Aaron Deich</title><subtitle>Statistics and scientific computation basics, written for people with a physics background.</subtitle><author><name>Aaron Deich</name></author><entry><title type="html">How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation</title><link href="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html" rel="alternate" type="text/html" title="How Safe Is It To Park Over The Time Limit? A Monte Carlo Simulation" /><published>2019-08-12T00:00:00-07:00</published><updated>2019-08-12T00:00:00-07:00</updated><id>http://localhost:4000/2019/08/12/modelling-parking-ticket-times</id><content type="html" xml:base="http://localhost:4000/2019/08/12/modelling-parking-ticket-times.html">&lt;p&gt;&lt;strong&gt;With careful consideration of model and parameter dependence.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;the-physical-scenario&quot;&gt;The physical scenario&lt;/h2&gt;
 
@@ -17,10 +17,35 @@
   &lt;li&gt;At the first arrival after the two-hour mark, the ticket is given.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&quot;my-model-of-the-visit-times&quot;&gt;My model of the visit times.&lt;/h2&gt;
+&lt;h2 id=&quot;thinking-about-a-model-for-this-process&quot;&gt;Thinking about a model for this process&lt;/h2&gt;
+
+&lt;h3 id=&quot;periodicity-or-lack-thereof&quot;&gt;Periodicity, or lack thereof&lt;/h3&gt;
+&lt;p&gt;There is likely &lt;em&gt;some&lt;/em&gt; periodicity to the arrivals of the PEV, except in the case where there are several PEVs on the same beat, able to communicate with each other. However, in either case, there will be some periodic behavior.&lt;/p&gt;
+
+&lt;p&gt;(1) Perfectly periodic visits look like this (mean period &lt;script type=&quot;math/tex&quot;&gt;\mu = 12&lt;/script&gt;):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/parking_periodic.png&quot; alt=&quot;CDF for long times&quot; title=&quot;title&quot; class=&quot;align-center&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;(2) Perfectly non-periodic visits (I’ve generated these with the exact same same mean period, &lt;script type=&quot;math/tex&quot;&gt;\mu=12&lt;/script&gt;) look something like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/parking_non_periodic.png&quot; alt=&quot;CDF for long times&quot; title=&quot;title&quot; class=&quot;align-center&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It is fascinating that to humans, this author very much included, truly random events don’t look random, at least not without a lot of re-training of our intuition. To me, the data points look like they arrive in clumps. This strikes me as what rain sounds like when it strikes a thin roof.&lt;/p&gt;
+
+&lt;p&gt;This latter distribution is very common in the natural world: any non-correlated i.i.d. events, such as photons from constant-intensity source hitting a detector, or rain drops striking a tin roof.&lt;/p&gt;
+
+&lt;p&gt;This latter case is called a Poisson process, about which the following properties:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;The time between arrivals is given by a negative exponential distribution.&lt;/li&gt;
+  &lt;li&gt;The total count of events during a time-duration &lt;script type=&quot;math/tex&quot;&gt;\Delta T&lt;/script&gt; is given by the Poisson distribution.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;A big question here is: how do we capture this quasi-periodicity with our probabilistic model?&lt;/p&gt;
+
+&lt;h3 id=&quot;my-proposed-solution-and-model-for-the-visit-times&quot;&gt;My proposed solution and model for the visit times.&lt;/h3&gt;
 &lt;p&gt;Say that the parking enforcement vehicle (PEV) arrives, on average, every &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; minutes—this is the mean wait time.&lt;/p&gt;
 
-&lt;p&gt;The following is my argument for my model, and why it’s plausible:&lt;/p&gt;
+&lt;p&gt;This is my model of the process, including arguments for why I think the model is plausible:&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Time &lt;em&gt;t=0&lt;/em&gt; starts at the moment you park the car.&lt;/li&gt;
@@ -42,18 +67,18 @@
 &lt;/ul&gt;
 
 &lt;p&gt;The monte carlo simulation thus takes this simple nested loop (pseudocode):&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;N := 10,000
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-guess_lang&quot; data-lang=&quot;guess_lang&quot;&gt;N := 10,000
 data := array(length=N)
 for n going from 1 to N:
   sum := generate_t0() # randomly drawn initial time
   while sum &amp;lt; 120: # minutes
     sum := sum + generate_t_i() # randomly drawn subsequent time
-  data[n] := sum   
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+  data[n] := sum   &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begin to approximate the true &lt;a href=&quot;https://en.wikipedia.org/wiki/Probability_density_function&quot;&gt;probability density function&lt;/a&gt; (pdf) as &lt;script type=&quot;math/tex&quot;&gt;N&lt;/script&gt;  gets big, according to the &lt;a href=&quot;https://en.wikipedia.org/wiki/Law_of_large_numbers&quot;&gt;Law of Large Numbers&lt;/a&gt;), starts to stabilize around &lt;script type=&quot;math/tex&quot;&gt;N &gt; \mathrm{10,000}&lt;/script&gt;.&lt;/p&gt;
 
-&lt;p&gt;Here is what a typical such histogram looks like:
+&lt;p&gt;Here’s what a histogram of this simulation’s typical output looks like:
 &lt;img src=&quot;/images/parking_hist_example.png&quot; alt=&quot;CDF for long times&quot; title=&quot;title&quot; class=&quot;align-center&quot; /&gt;
 Though, as discussed in the results section, below, this is not as useful a representation of the data for our purposes as a cumulative distribution function (CDF) view.&lt;/p&gt;
 
@@ -65,7 +90,9 @@ Though, as discussed in the results section, below, this is not as useful a repr
 
 &lt;h2 id=&quot;simulation-results&quot;&gt;Simulation results&lt;/h2&gt;
 
-&lt;p&gt;However, this view of the data does not allow us to figure out what the odds are of getting a parking ticket at specific times of being over-parked. For that, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.&lt;/p&gt;
+&lt;p&gt;For visualizing the probability of getting a ticket as a function of how long we’re over-parked, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.&lt;/p&gt;
+
+&lt;p&gt;There are different lines for different values of &lt;script type=&quot;math/tex&quot;&gt;\sigma&lt;/script&gt;, the noisiness away from perfect periodicity by the PEV.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/parking_CDF_plot_1.png&quot; alt=&quot;CDF for long times&quot; title=&quot;title&quot; class=&quot;align-center&quot; /&gt;
 &lt;img src=&quot;/images/parking_CDF_plot_2.png&quot; alt=&quot;CDF for short times&quot; title=&quot;title&quot; class=&quot;align-center&quot; /&gt;&lt;/p&gt;

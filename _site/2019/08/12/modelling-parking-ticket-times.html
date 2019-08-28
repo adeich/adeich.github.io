@@ -185,7 +185,12 @@
       <li><a href="#the-order-of-events-leading-to-a-ticket">The order of events leading to a ticket.</a></li>
     </ul>
   </li>
-  <li><a href="#my-model-of-the-visit-times">My model of the visit times.</a></li>
+  <li><a href="#thinking-about-a-model-for-this-process">Thinking about a model for this process</a>
+    <ul>
+      <li><a href="#periodicity-or-lack-thereof">Periodicity, or lack thereof</a></li>
+      <li><a href="#my-proposed-solution-and-model-for-the-visit-times">My proposed solution and model for the visit times.</a></li>
+    </ul>
+  </li>
   <li><a href="#implementation-details">Implementation details</a>
     <ul>
       <li><a href="#inability-to-vectorize-the-arrival-time-loops">Inability to vectorize the arrival time loops</a></li>
@@ -216,10 +221,35 @@
   <li>At the first arrival after the two-hour mark, the ticket is given.</li>
 </ol>
 
-<h2 id="my-model-of-the-visit-times">My model of the visit times.</h2>
+<h2 id="thinking-about-a-model-for-this-process">Thinking about a model for this process</h2>
+
+<h3 id="periodicity-or-lack-thereof">Periodicity, or lack thereof</h3>
+<p>There is likely <em>some</em> periodicity to the arrivals of the PEV, except in the case where there are several PEVs on the same beat, able to communicate with each other. However, in either case, there will be some periodic behavior.</p>
+
+<p>(1) Perfectly periodic visits look like this (mean period <script type="math/tex">\mu = 12</script>):</p>
+
+<p><img src="/images/parking_periodic.png" alt="CDF for long times" title="title" class="align-center" /></p>
+
+<p>(2) Perfectly non-periodic visits (I’ve generated these with the exact same same mean period, <script type="math/tex">\mu=12</script>) look something like this:</p>
+
+<p><img src="/images/parking_non_periodic.png" alt="CDF for long times" title="title" class="align-center" /></p>
+
+<p>It is fascinating that to humans, this author very much included, truly random events don’t look random, at least not without a lot of re-training of our intuition. To me, the data points look like they arrive in clumps. This strikes me as what rain sounds like when it strikes a thin roof.</p>
+
+<p>This latter distribution is very common in the natural world: any non-correlated i.i.d. events, such as photons from constant-intensity source hitting a detector, or rain drops striking a tin roof.</p>
+
+<p>This latter case is called a Poisson process, about which the following properties:</p>
+<ol>
+  <li>The time between arrivals is given by a negative exponential distribution.</li>
+  <li>The total count of events during a time-duration <script type="math/tex">\Delta T</script> is given by the Poisson distribution.</li>
+</ol>
+
+<p>A big question here is: how do we capture this quasi-periodicity with our probabilistic model?</p>
+
+<h3 id="my-proposed-solution-and-model-for-the-visit-times">My proposed solution and model for the visit times.</h3>
 <p>Say that the parking enforcement vehicle (PEV) arrives, on average, every <script type="math/tex">\mu</script> minutes—this is the mean wait time.</p>
 
-<p>The following is my argument for my model, and why it’s plausible:</p>
+<p>This is my model of the process, including arguments for why I think the model is plausible:</p>
 
 <ul>
   <li>Time <em>t=0</em> starts at the moment you park the car.</li>
@@ -241,18 +271,18 @@
 </ul>
 
 <p>The monte carlo simulation thus takes this simple nested loop (pseudocode):</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>N := 10,000
+
+<figure class="highlight"><pre><code class="language-guess_lang" data-lang="guess_lang">N := 10,000
 data := array(length=N)
 for n going from 1 to N:
   sum := generate_t0() # randomly drawn initial time
   while sum &lt; 120: # minutes
     sum := sum + generate_t_i() # randomly drawn subsequent time
-  data[n] := sum   
-</code></pre></div></div>
+  data[n] := sum   </code></pre></figure>
 
 <p>For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begin to approximate the true <a href="https://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) as <script type="math/tex">N</script>  gets big, according to the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">Law of Large Numbers</a>), starts to stabilize around <script type="math/tex">N > \mathrm{10,000}</script>.</p>
 
-<p>Here is what a typical such histogram looks like:
+<p>Here’s what a histogram of this simulation’s typical output looks like:
 <img src="/images/parking_hist_example.png" alt="CDF for long times" title="title" class="align-center" />
 Though, as discussed in the results section, below, this is not as useful a representation of the data for our purposes as a cumulative distribution function (CDF) view.</p>
 
@@ -264,7 +294,9 @@ Though, as discussed in the results section, below, this is not as useful a repr
 
 <h2 id="simulation-results">Simulation results</h2>
 
-<p>However, this view of the data does not allow us to figure out what the odds are of getting a parking ticket at specific times of being over-parked. For that, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.</p>
+<p>For visualizing the probability of getting a ticket as a function of how long we’re over-parked, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.</p>
+
+<p>There are different lines for different values of <script type="math/tex">\sigma</script>, the noisiness away from perfect periodicity by the PEV.</p>
 
 <p><img src="/images/parking_CDF_plot_1.png" alt="CDF for long times" title="title" class="align-center" />
 <img src="/images/parking_CDF_plot_2.png" alt="CDF for short times" title="title" class="align-center" /></p>

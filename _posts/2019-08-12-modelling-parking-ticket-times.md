@@ -21,10 +21,34 @@ To quantify the actual time you can park over the limit for, say, a 1% chance, o
 3. Several intermediate arrivals may occur, but if two hours hasn't passed, nothing changes.
 4. At the first arrival after the two-hour mark, the ticket is given.
 
-## My model of the visit times.
+## Thinking about a model for this process
+
+### Periodicity, or lack thereof
+There is likely *some* periodicity to the arrivals of the PEV, except in the case where there are several PEVs on the same beat, able to communicate with each other. However, in either case, there will be some periodic behavior.
+
+(1) Perfectly periodic visits look like this (mean period $$\mu = 12$$):
+
+
+![CDF for long times](/images/parking_periodic.png 'title'){: .align-center}
+
+(2) Perfectly non-periodic visits (I've generated these with the exact same same mean period, $$\mu=12$$) look something like this:
+
+![CDF for long times](/images/parking_non_periodic.png 'title'){: .align-center}
+
+It is fascinating that to humans, this author very much included, truly random events don't look random, at least not without a lot of re-training of our intuition. To me, the data points look like they arrive in clumps. This strikes me as what rain sounds like when it strikes a thin roof.
+
+This latter distribution is very common in the natural world: any non-correlated i.i.d. events, such as photons from constant-intensity source hitting a detector, or rain drops striking a tin roof.
+
+This latter case is called a Poisson process, about which the following properties:
+1. The time between arrivals is given by a negative exponential distribution.
+2. The total count of events during a time-duration $$\Delta T$$ is given by the Poisson distribution.
+
+A big question here is: how do we capture this quasi-periodicity with our probabilistic model?
+
+### My proposed solution and model for the visit times.
 Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time.
 
-The following is my argument for my model, and why it's plausible:
+This is my model of the process, including arguments for why I think the model is plausible:
 
 * Time *t=0* starts at the moment you park the car.
 * If the PEV is traveling with perfect periodicity of $$T=\mu$$, then the time until its first arrival, $$t_0$$, is randomly drawn from a uniform distribution $$t_0 \sim \mathrm{uniform}[0, \mu]$$, since the phase of the parking vehicle's loop is uncorrelated with your own arrival.
@@ -40,7 +64,7 @@ $$t_i \sim C + \mathrm{gamma}(a, \mu - C, \sigma),$$
 * where $$C$$ is the minimum lap time (physically corresponding to duration of the parking enforcement traveling at full speed the whole way around the lap, without stopping to give tickets or for stop signs, etc.). The gamma distribution applies to processes that have a large number $$(n \gtrapprox 50)$$ of subsequent, exponentially-derived events.
 
 The monte carlo simulation thus takes this simple nested loop (pseudocode):
-~~~~
+{% highlight guess_lang %}
 N := 10,000
 data := array(length=N)
 for n going from 1 to N:
@@ -48,11 +72,11 @@ for n going from 1 to N:
   while sum < 120: # minutes
     sum := sum + generate_t_i() # randomly drawn subsequent time
   data[n] := sum   
-~~~~
+{% endhighlight %}
 
 For each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded. I found that the histogram (which will begin to approximate the true [probability density function](https://en.wikipedia.org/wiki/Probability_density_function) (pdf) as $$N$$  gets big, according to the [Law of Large Numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers)), starts to stabilize around $$N > \mathrm{10,000}$$.
 
-Here is what a typical such histogram looks like:
+Here's what a histogram of this simulation's typical output looks like:
 ![CDF for long times](/images/parking_hist_example.png 'title'){: .align-center}
 Though, as discussed in the results section, below, this is not as useful a representation of the data for our purposes as a cumulative distribution function (CDF) view.
 
@@ -65,7 +89,9 @@ After
 ## Simulation results
 
 
-However, this view of the data does not allow us to figure out what the odds are of getting a parking ticket at specific times of being over-parked. For that, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.
+For visualizing the probability of getting a ticket as a function of how long we're over-parked, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.
+
+There are different lines for different values of $$\sigma$$, the noisiness away from perfect periodicity by the PEV.
 
 
 ![CDF for long times](/images/parking_CDF_plot_1.png 'title'){: .align-center}
