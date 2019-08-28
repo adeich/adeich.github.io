@@ -1,5 +1,4 @@
 ---
-layout: post
 title:  "A Title for a New Future"
 date:   2019-08-01 14:34:41 -0700
 categories: jekyll update

@@ -1,10 +1,10 @@
 # Configs for aaron deich 
 
+description: "Statistics and scientific computation basics, written for people with a physics background."
 title: "Aaron Deich"
-name: "Aarpm Deich"
-#email: peter@pwills.com
-#url: "http://www.pwills.com"
-#repository: "peterewills/peterewills.github.io"
+#email: 
+#url: 
+repository: "adeich/adeich.github.io"
 
 include:
   - _pages
@@ -16,23 +16,25 @@ exclude:
 
 plugins:
   - jekyll-feed
-  - jekyll-remote-theme
+#  - jekyll-remote-theme
   - jekyll-include-cache
   - jekyll-paginate
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-minimal
+theme: minimal-mistakes-jekyll 
+#theme: jekyll-theme-minimal
 #remote_theme: "mmistakes/minimal-mistakes"
-#minimal_mistakes_skin: "contrast"
+minimal_mistakes_skin: "air"
   
 # settings for author profile
+
 author:
   name   : "Aaron Deich"
 #  avatar : "/assets/images/headshot.jpg"
-  bio    : "this is my bio"
-  location: "San Francisco, CA"
-#  github : peterewills
+#  bio    : "this is my bio"
+#  location: "San Francisco, CA"
+#  github : adeich 
 #  linkedin: peterewills
 #  email  : peter@pwills.comg
 
