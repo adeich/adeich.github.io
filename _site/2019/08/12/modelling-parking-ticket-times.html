@@ -185,6 +185,7 @@
     </ul>
   </li>
 <<<<<<< HEAD
+<<<<<<< HEAD
   <li><a href="#thinking-about-a-model-for-this-process">Thinking about a model for this process</a>
     <ul>
       <li><a href="#the-order-of-events-leading-to-a-ticket">The order of events leading to a ticket</a></li>
@@ -197,6 +198,9 @@
       </li>
     </ul>
   </li>
+=======
+  <li><a href="#my-model-of-the-visit-times">My model of the visit times.</a></li>
+>>>>>>> parent of 6723020... Updated parking article
 =======
   <li><a href="#my-model-of-the-visit-times">My model of the visit times.</a></li>
 >>>>>>> parent of 6723020... Updated parking article
@@ -251,6 +255,7 @@
 </ol>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <p>This is a non-trivial problem because the parking enforcement vehicles (<em>PEV</em>) do not arrive at precise, regular intervals.</p>
 
 <h3 id="periodicity-or-lack-thereof">Periodicity, or lack thereof</h3>
@@ -292,10 +297,15 @@
 
 <p>Here I describe my model of the process, including plausibility arguments.</p>
 =======
+=======
+>>>>>>> parent of 6723020... Updated parking article
 <h2 id="my-model-of-the-visit-times">My model of the visit times.</h2>
 <p>Say that the parking enforcement vehicle (PEV) arrives, on average, every <script type="math/tex">\mu</script> minutes—this is the mean wait time.</p>
 
 <p>The following is my argument for my model, and why it’s plausible:</p>
+<<<<<<< HEAD
+>>>>>>> parent of 6723020... Updated parking article
+=======
 >>>>>>> parent of 6723020... Updated parking article
 
 <ul>
@@ -333,9 +343,14 @@
 </ul>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <p>The monte carlo simulation thus takes the form of this simple nested loop (pseudocode):</p>
 
 <figure class="highlight"><pre><code class="language-guess_lang" data-lang="guess_lang">N := 10,000
+=======
+<p>The monte carlo simulation thus takes this simple nested loop (pseudocode):</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>N := 10,000
+>>>>>>> parent of 6723020... Updated parking article
 =======
 <p>The monte carlo simulation thus takes this simple nested loop (pseudocode):</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>N := 10,000
@@ -350,6 +365,7 @@ for n going from 1 to N:
 
 <p>That is, for each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded.</p>
 
+<<<<<<< HEAD
 <p>I found that the histogram (which will begin to approximate the true <a href="https://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) as <script type="math/tex">N</script>  gets big, according to the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">Law of Large Numbers</a>), starts to stabilize around <script type="math/tex">N > \mathrm{10,000}</script>.</p>
 
 <p>Here’s what a histogram of this simulation’s typical output looks like:</p>
@@ -357,6 +373,8 @@ for n going from 1 to N:
 <<<<<<< HEAD
 <p><img src="/images/parking_hist_example.png" alt="CDF for long times" title="title" class="align-center" />
 =======
+=======
+>>>>>>> parent of 6723020... Updated parking article
 <p>Here is what a typical such histogram looks like:
 <img src="/images/parking_hist_example.png" alt="CDF for long times" title="title" class="align-center" />
 >>>>>>> parent of 6723020... Updated parking article
@@ -429,6 +447,7 @@ a &= \big{(}\frac{\mu}{\sigma}\big{)}^2.
 <h2 id="simulation-results">Simulation results</h2>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <p>For visualizing the probability of getting a ticket as a function of how long we’re over-parked, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.</p>
 
 <p>There are different lines for different values of <script type="math/tex">\sigma</script>, which represents the noisiness away from perfect periodicity by the PEV.</p>
@@ -436,6 +455,9 @@ a &= \big{(}\frac{\mu}{\sigma}\big{)}^2.
 <p><img src="/images/parking_CDF_plot_1.png" alt="CDF for long times" title="title" class="align-center" /></p>
 
 <p>Above, <script type="math/tex">\sigma/\mu</script> is varied from 0.15 to 1, and there is some varying effect on the CDF.</p>
+=======
+<p>However, this view of the data does not allow us to figure out what the odds are of getting a parking ticket at specific times of being over-parked. For that, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.</p>
+>>>>>>> parent of 6723020... Updated parking article
 
 <p><img src="/images/parking_CDF_plot_2.png" alt="CDF for short times" title="title" class="align-center" />
 It’s also interesting to look at what happens within the regime of extremely precise PEV visits <script type="math/tex">% <![CDATA[

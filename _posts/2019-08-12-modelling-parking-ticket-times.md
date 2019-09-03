@@ -40,6 +40,7 @@ Let's review the fundamentals here.
 4. At the first arrival after the two-hour mark, the ticket is given.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 This is a non-trivial problem because the parking enforcement vehicles (*PEV*) do not arrive at precise, regular intervals.
 
 ### Periodicity, or lack thereof
@@ -84,10 +85,15 @@ Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$
 
 Here I describe my model of the process, including plausibility arguments.
 =======
+=======
+>>>>>>> parent of 6723020... Updated parking article
 ## My model of the visit times.
 Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time.
 
 The following is my argument for my model, and why it's plausible:
+<<<<<<< HEAD
+>>>>>>> parent of 6723020... Updated parking article
+=======
 >>>>>>> parent of 6723020... Updated parking article
 
 * Time *t=0* starts at the moment you park the car.
@@ -106,6 +112,7 @@ $$\lambda_0 = \sigma/\mu (\mathrm{uniform}[0, \mu]) + (1 - \sigma/\mu) (e^{\lamb
 
 $$\lambda_i = \mathrm{gamma}(a, \mu, \sigma),$$
 
+<<<<<<< HEAD
 * The gamma distribution applies to processes that have a large number $$(n \gtrapprox 50)$$ of subsequent, exponentially-derived events.
 
 <<<<<<< HEAD
@@ -113,6 +120,10 @@ $$\lambda_i = \mathrm{gamma}(a, \mu, \sigma),$$
 
 The monte carlo simulation thus takes the form of this simple nested loop (pseudocode):
 {% highlight guess_lang %}
+=======
+The monte carlo simulation thus takes this simple nested loop (pseudocode):
+~~~~
+>>>>>>> parent of 6723020... Updated parking article
 =======
 The monte carlo simulation thus takes this simple nested loop (pseudocode):
 ~~~~
@@ -128,11 +139,15 @@ for n going from 1 to N:
 
 That is, for each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded.
 
+<<<<<<< HEAD
 I found that the histogram (which will begin to approximate the true [probability density function](https://en.wikipedia.org/wiki/Probability_density_function) (pdf) as $$N$$  gets big, according to the [Law of Large Numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers)), starts to stabilize around $$N > \mathrm{10,000}$$.
 
 <<<<<<< HEAD
 Here's what a histogram of this simulation's typical output looks like:
 
+=======
+Here is what a typical such histogram looks like:
+>>>>>>> parent of 6723020... Updated parking article
 =======
 Here is what a typical such histogram looks like:
 >>>>>>> parent of 6723020... Updated parking article
@@ -213,9 +228,13 @@ gamma(x, a=(mean/sigma)**2, loc=0, scale=sigma**2 / mean)
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 For visualizing the probability of getting a ticket as a function of how long we're over-parked, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.
 
 There are different lines for different values of $$\sigma$$, which represents the noisiness away from perfect periodicity by the PEV.
+=======
+However, this view of the data does not allow us to figure out what the odds are of getting a parking ticket at specific times of being over-parked. For that, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.
+>>>>>>> parent of 6723020... Updated parking article
 =======
 However, this view of the data does not allow us to figure out what the odds are of getting a parking ticket at specific times of being over-parked. For that, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.
 >>>>>>> parent of 6723020... Updated parking article
