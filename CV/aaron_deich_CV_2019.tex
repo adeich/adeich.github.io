@@ -1,0 +1,288 @@
+% Adapted from layout by GaelVaroquaux
+%  http://gael-varoquaux.info
+%
+
+\documentclass{article} %{{{--
+
+\usepackage[paper=a4paper,
+	    top=2cm,
+	    left=1.35cm,
+	    width=18.2cm,
+	    bottom=2cm
+	    ]{geometry}
+            %margin=4cm,
+
+\usepackage{calc}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{color,hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+
+\usepackage{wasysym} % For phone symbol
+\usepackage{url}
+
+\def\bf{\bfseries}
+\def\sf{\sffamily}
+\def\sl{\slshape}
+% Semi condensed bold
+
+\definecolor{deep_blue}{rgb}{0,.2,.5}
+\definecolor{dark_blue}{rgb}{0,.1,.3}
+\definecolor{myblue}{rgb}{.01,0.21,0.71}
+\definecolor{gray}{rgb}{.5, .5, .5}
+
+\hypersetup{pdftex,  % needed for pdflatex
+  breaklinks=true,  % so long urls are correctly broken across lines
+  colorlinks=true,
+  urlcolor=myblue,
+  %linkcolor=darkblue,
+  %citecolor=darkgreen,
+  }
+
+
+%% This gives us fun enumeration environments.
+\usepackage{enumitem}
+
+%% More layout: Get rid of indenting throughout entire document
+\setlength{\parindent}{0in}
+
+%% Reference the last page in the page number
+%
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}
+%\pagestyle{empty}      % Uncomment this to get rid of page numbers
+\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+%\fancyfootoffset{\marginparsep}+\marginparwidth}
+\lfoot{
+  \hspace{-2\marginparsep}
+  \,\hfill \arabic{page} of \protect\pageref*{LastPage}  \hfill \,\\
+  \,\hfill {\footnotesize \textcolor{gray}{updated July 2018~~~~~}} \hfill\,
+}
+
+\newcommand{\mydate}[1]{{\textcolor{gray}{\footnotesize #1}}}
+
+
+\newcommand{\makeheading}[1]%
+        {%\hspace*{-\marginparsep minus \marginparwidth}%
+         %\begin{minipage}[t]{\textwidth+\marginparwidth+\marginparsep}%
+         \begin{minipage}[t]{\textwidth}%
+                {\Large #1}\\%[-0.5\baselineskip]%
+                \vskip 0.2\baselineskip
+                 \color{deep_blue}{\rule{\columnwidth}{3pt}}%
+         \end{minipage}
+	 \vskip 1.\baselineskip plus 2\baselineskip minus 1.\baselineskip
+	}
+
+\newlength\sidebarwidth
+\setlength\sidebarwidth{3.6cm}
+
+\newcommand{\topic}[3][]%
+	 {\pagebreak[2]%
+	 \vskip 1.5\baselineskip plus 3\baselineskip minus 0.7\baselineskip
+	 \begin{minipage}{\textwidth}
+         \phantomsection\addcontentsline{toc}{section}{#1}%
+         \nopagebreak\hspace{0in}%
+         \nopagebreak\begin{minipage}[t]{\sidebarwidth - .2cm}
+         \raggedleft \bf\sf
+	 \color{deep_blue}{\Large #2}
+	 \end{minipage}%
+	 \hfill
+	 \begin{minipage}[t]{\linewidth - \sidebarwidth}
+	 \nopagebreak{\color{deep_blue}%
+		    \rule{0pt}{\baselineskip}%
+		    \rule{\linewidth}{2.5pt}%
+		    \llap{\raisebox{.3\baselineskip}{\sf #1}}%
+		    \vspace*{.1\baselineskip}%
+		    }%
+	 #3%
+	 \end{minipage}
+	 \end{minipage}}
+
+\newcommand{\smalltopic}[2]%
+	 {\pagebreak[2]%
+	 \vskip 1\baselineskip plus 2\baselineskip minus 0.3\baselineskip
+	 \begin{minipage}{\textwidth}
+	 %\hspace{-\marginparsep minus \marginparwidth}%
+         \phantomsection\addcontentsline{toc}{subsection}{#1}%
+         \nopagebreak\hspace{0in}%
+         \nopagebreak\begin{minipage}[t]{\sidebarwidth - .2cm}
+         \raggedleft \bf\sf %\vskip -0.5\baselineskip
+	 \textcolor{dark_blue}{\large #1}%
+	 \end{minipage}%
+	 \hfill
+	 \begin{minipage}[t]{\linewidth - \sidebarwidth}
+	 \nopagebreak{%
+	    %\vspace{-.7\baselineskip}%
+	    \rule{\linewidth}{.5pt}%
+	    \vspace{.1\baselineskip}%
+	    }%
+	    #2
+	 \end{minipage}
+	 \end{minipage}}
+
+\newcommand{\subtopic}[3][]
+	 {\begin{minipage}{\textwidth}
+	 \vspace*{.4\baselineskip}
+         \nopagebreak\hspace{0in}%
+         \nopagebreak\begin{minipage}[t]{\sidebarwidth - .2cm}
+	 % Super posh: using semi-bold condensed fonts. Works only with
+	 % lmodern
+         \raggedleft {\sf\fontseries{sbc}\selectfont #2}
+	 %{\small\sl\\[-0.2\baselineskip] #1}
+         {\\[-0.2\baselineskip] \textcolor{gray}{\footnotesize #1}}
+	 \end{minipage}%
+	 \hfill
+	 \begin{minipage}[t]{\linewidth - \sidebarwidth}
+	 #3%
+	 \end{minipage}%
+	 \vspace*{.2\baselineskip plus 1\baselineskip minus
+	 .2\baselineskip}%
+	 \end{minipage}}
+
+\newcommand{\dateonly}[2][]
+	 {\begin{minipage}{\textwidth}
+	 \vspace*{.4\baselineskip}
+         \nopagebreak\hspace{0in}%
+         \nopagebreak\begin{minipage}[t]{\sidebarwidth - .2cm}
+         \raggedleft {~}
+         {\\[-\baselineskip] \textcolor{gray}{\footnotesize #1}}
+	 \end{minipage}%
+	 \hfill
+	 \begin{minipage}[t]{\linewidth - \sidebarwidth}
+	 #2%
+	 \end{minipage}%
+	 \vspace*{.2\baselineskip plus 1\baselineskip minus
+	 .2\baselineskip}%
+	 \end{minipage}}
+
+\newcommand{\sidenote}[2]
+	 {\vspace*{-.2\baselineskip}\begin{minipage}{\textwidth}
+         \nopagebreak\hspace{0in}%
+         \nopagebreak\begin{minipage}[t]{\sidebarwidth - .2cm}
+         \raggedleft {#1}
+	 \end{minipage}%
+	 \hfill
+	 \begin{minipage}[t]{\linewidth - \sidebarwidth}
+	 #2%
+	 \end{minipage}%
+	 \vspace*{.5\baselineskip plus 1\baselineskip minus
+	 .2\baselineskip}%
+	 \end{minipage}}
+
+% New lists environments
+\newlist{outerlist}{itemize}{1}
+\setlist[outerlist]{font=\sffamily\bfseries, label=\textbullet}
+\setitemize{topsep=0ex, partopsep=0ex}
+\setdescription{font=\normalfont\sffamily\bfseries, itemsep=.5ex,
+    parsep=.5ex, leftmargin=3ex}
+
+\newcommand{\blankline}{\quad\pagebreak[2]}
+
+\def\mydot{\textcolor{deep_blue}{\rule{1ex}{1ex}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--}}}%
+\begin{document}
+\makeheading{
+\begin{minipage}[B]{0.5\textwidth}
+    %\vfill
+    \vspace*{-.5\baselineskip}%
+    \parbox{10cm}{
+	\hskip -0.1cm
+	{\Huge\bf\sf \color{deep_blue} A\huge \hskip -0.05cm ARON %
+	 \Huge D\huge \hskip -0.05cm EICH}
+	\\[-.1\baselineskip]
+	{\bf\sf Physicist \&}
+        \\
+        {\bf\sf Data Scientist}
+       }
+\end{minipage}
+\hfill
+\begin{minipage}[B]{8cm}
+    \raggedleft
+    \,\vskip -1em
+    \small
+	{\texttt {deichaaron@gmail.com}\\
+    \vspace*{.5\baselineskip}%
+         San Francisco, CA}%
+    \vspace*{-.5\baselineskip}%
+\end{minipage}
+}
+
+%\begin{center}
+%\begin{minipage}{15cm}
+
+\begin{center}
+My driving goal is to use, support, and advocate open \& reproducible
+software practices across disciplines.
+\end{center}
+
+\begin{multicols}{2}
+\sloppy
+
+%\textcolor{deep_blue}{\bf\sf Research interests}:
+%Cosmology, weak lensing, data mining and automated learning algorithms for
+%large astronomical data sets.
+
+\begin{itemize}[leftmargin=2ex, itemsep=0ex]
+\item[\mydot]
+I am the Director of Open Software at the University of Washington's eScience
+institute, an interdisciplinary program designed to support data-driven
+discovery across disciplines. At the institute I work with students,
+researchers, and faculty in a variety of settings.
+
+\item[\mydot]
+I maintain a technical blog, \href{http://jakevdp.github.io/}{Pythonic Perambulations}, to share tutorials and opinions related to statistics, open software, and scientific computing in Python.
+
+\item[\mydot]
+I invest a significant amount of time in creating and developing
+Python tools for use in data-intensive science, including packages like
+{\it Scikit-Learn}, {\it SciPy}, {\it AstroPy}, {\it Altair}, and many others.
+
+\smalltopic{Software}{}
+
+   \subtopic[2010--Present]{Scikit-Learn}{
+     I a member of the core team of
+     \href{http://scikit-learn.org}{scikit-learn},
+     a popular package for performing machine learning in Python.  I
+     have contributed in many areas, but most notably routines for efficient
+     2-point (e.g. nearest neighbors) queries, and algorithms based on these
+     such as {\it k}-neighbor classification, kernel density estimation,
+     and manifold learning.  I have also presented tutorials on the subject
+     on many occasions, including at the PyCon, SciPy, and PyData
+     conferences.}
+
+   \subtopic[2011--Present]{SciPy}{
+     I am a maintainer of
+     \href{http://scipy.org}{SciPy}, the definitive repository for many
+     scientific computing tools available in Python.
+     My contributions are primarily in the sparse
+     matrix package, including code for efficient solutions of large sparse
+     eigenvalue problems, and for efficient traversal and analysis of
+     large sparse graphs.
+   }
+
+   \subtopic[2016-Present]{Altair}{
+     I am co-creator of the \href{http://github.com/ellisonbg/altair}{Altair}
+     project, a declarative statistical visualization library for Python built
+     on the Vega-Lite visualization grammar.
+   }
+
+   \subtopic[2014--Present]{AstroPy}{
+	 I have contributed several components of the suite of statistics tools
+	 for the \href{http://astropy.org}{AstroPy} project, a Python package aimed at astronomers. In
+	 particular, I wrote the modules for \href{http://docs.astropy.org/en/stable/visualization/histogram.html}{Bayesian Blocks}
+	 and the \href{http://docs.astropy.org/en/stable/stats/lombscargle.html}{Lomb-Scargle Periodogram}.
+   }
+
+   \subtopic[]{Others}{
+     I have created and contributed to many other Python projects, including
+     Matplotlib, IPython, NumPy, Pandas, AstroML, SciDB-Py, Pelican, mpld3,
+     and others.
+     I have also open-sourced much of my research code and teaching materials.
+     More information is available in my
+     \href{http://github.com/jakevdp}{GitHub profile}.
+   }
+
+\end{document}
