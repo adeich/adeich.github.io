@@ -39,6 +39,7 @@ Let's review the fundamentals here.
 3. Several intermediate arrivals, but if two hours hasn't passed since the first arrival, nothing changes.
 4. At the first arrival after the two-hour mark, the ticket is given.
 
+<<<<<<< HEAD
 This is a non-trivial problem because the parking enforcement vehicles (*PEV*) do not arrive at precise, regular intervals.
 
 ### Periodicity, or lack thereof
@@ -82,6 +83,12 @@ A big question here is: how do we capture this quasi-periodicity with our probab
 Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time. We can all easily agree on $$\mu$$ empirically, because we just count the number of visits $$N$$ during time interval $$\Delta T$$ and $$\mu = \Delta T / N$$.
 
 Here I describe my model of the process, including plausibility arguments.
+=======
+## My model of the visit times.
+Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time.
+
+The following is my argument for my model, and why it's plausible:
+>>>>>>> parent of 6723020... Updated parking article
 
 * Time *t=0* starts at the moment you park the car.
 
@@ -101,10 +108,15 @@ $$\lambda_i = \mathrm{gamma}(a, \mu, \sigma),$$
 
 * The gamma distribution applies to processes that have a large number $$(n \gtrapprox 50)$$ of subsequent, exponentially-derived events.
 
+<<<<<<< HEAD
 * We will then simply add times drawn from this distribution to our total elapsed time until two-hours is exceeded.
 
 The monte carlo simulation thus takes the form of this simple nested loop (pseudocode):
 {% highlight guess_lang %}
+=======
+The monte carlo simulation thus takes this simple nested loop (pseudocode):
+~~~~
+>>>>>>> parent of 6723020... Updated parking article
 N := 10,000
 data := array(length=N)
 for n going from 1 to N:
@@ -112,14 +124,18 @@ for n going from 1 to N:
   while sum < 120: # minutes
     sum := sum + generate_t_i() # randomly drawn subsequent time
   data[n] := sum   
-{% endhighlight %}
+~~~~
 
 That is, for each iteration of the time-until-ticket simulation, we sum randomly drawn arrival times until 2 hours is exceeded; the total elapsed time is then recorded.
 
 I found that the histogram (which will begin to approximate the true [probability density function](https://en.wikipedia.org/wiki/Probability_density_function) (pdf) as $$N$$  gets big, according to the [Law of Large Numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers)), starts to stabilize around $$N > \mathrm{10,000}$$.
 
+<<<<<<< HEAD
 Here's what a histogram of this simulation's typical output looks like:
 
+=======
+Here is what a typical such histogram looks like:
+>>>>>>> parent of 6723020... Updated parking article
 ![CDF for long times](/images/parking_hist_example.png 'title'){: .align-center}
 Though, as discussed in the results section, below, this is not as useful a representation of the data for our purposes as a cumulative distribution function (CDF) view.
 
@@ -196,9 +212,13 @@ gamma(x, a=(mean/sigma)**2, loc=0, scale=sigma**2 / mean)
 ## Simulation results
 
 
+<<<<<<< HEAD
 For visualizing the probability of getting a ticket as a function of how long we're over-parked, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.
 
 There are different lines for different values of $$\sigma$$, which represents the noisiness away from perfect periodicity by the PEV.
+=======
+However, this view of the data does not allow us to figure out what the odds are of getting a parking ticket at specific times of being over-parked. For that, here is a plot of the CDF (cumulative distribution function), which tells you the probability (expressed as a percentage) of getting a ticket after given number of minutes after the two-hour mark.
+>>>>>>> parent of 6723020... Updated parking article
 
 
 ![CDF for long times](/images/parking_CDF_plot_1.png 'title'){: .align-center}
