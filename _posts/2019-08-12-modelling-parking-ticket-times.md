@@ -85,7 +85,6 @@ Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$
 
 Here I describe my model of the process, including plausibility arguments.
 =======
-=======
 >>>>>>> parent of 6723020... Updated parking article
 ## My model of the visit times.
 Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time.
