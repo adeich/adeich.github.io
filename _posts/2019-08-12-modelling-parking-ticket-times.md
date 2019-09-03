@@ -3,7 +3,6 @@ title: "How Safe Is It To Park Over The Time Limit?"
 date:   2019-08-12
 published: true
 sidebar: toc
-permalink: "/simulating-parking-ticket-times/"
 layout: single
 ---
 **A Monte Carlo Simulation that looks at parameter dependence on the outcomes.**
