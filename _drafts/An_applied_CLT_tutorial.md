@@ -3,10 +3,16 @@ title: "The central limit theorem: a powerful technology"
 date:   2019-08-29
 published: true
 sidebar: toc
-layout: single
+layout: post
 ---
 
 Or: how statistics (a.k.a. being clever) lets you take a lot of decent sensors and make a much better combined sensor from them.
+
+Statistics, as a discipline of thought, began with the interest / hope of distilling/filtering information from noise.
+
+Here's a rather incredible and nonintuitive statement: if you have lots (two, or ten, or millions) of shoddy measurements (of, say, temperature in a room), you can combine all the equally low-information measurements to form a *much* more precise state of knowledge of what you're trying to measure.
+
+And whether this idea was true was long debated by scientists!
 
 Say you have a digital thermometer that costs $1 and has an accuracy of $$\pm 1$$ degree F. Say that, on a cold day, it reads 32 degrees. How close do you expect this is to the temperature a highly accurate ($$\pm 0.1$$ degree F) thermometer would read?
 
@@ -22,3 +28,5 @@ Incensed, outraged at the lot the universe has given you, you buy another eight 
 Have we learned anything new about the probable nature of the air in the cave? (Guessing by the title of the post--yes.)
 
 Random walks!
+
+CLT: If the sourcing distribution has variance $$\sigma^2$$, then the variance of the sample mean (sum of all $$n$$ measurements) will be simply $$\sigma^2/n$$, or standard deviation $$\sigma/\sqrt{n}$$.

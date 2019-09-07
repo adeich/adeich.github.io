@@ -1,15 +1,12 @@
 source "https://rubygems.org"
 
-
 gem "jekyll", "~> 3.8.6"
 
-# Theme
+gem "minima", "~> 2.0"
 gem "jekyll-remote-theme"
-gem "minimal-mistakes-jekyll"
+#gem "minimal-mistakes-jekyll"
 gem "jekyll-include-cache"
 gem "jekyll-paginate"
-#gem "jekyll-theme-minimal"
-
 
 # If you want to use GitHub Pages, remove the "gem "jekyll"" above and
 # uncomment the line below. To upgrade, run `bundle update github-pages`.
