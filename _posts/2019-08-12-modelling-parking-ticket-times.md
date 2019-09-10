@@ -3,7 +3,7 @@ title: "How Safe Is It To Park Over The Time Limit?"
 date:   2019-08-12
 published: true
 sidebar: toc
-layout: post 
+layout: post
 ---
 **A Monte Carlo Simulation that looks at parameter dependence on the outcomes.**
 
@@ -79,7 +79,7 @@ For this simulation I am using property (1), summing up the time between arrival
 A big question here is: how do we capture this quasi-periodicity with our probabilistic model?
 
 ### My proposed solution and model for the visit times.
-Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time. We can all easily agree on $$\mu$$ empirically, because we just count the number of visits $$N$$ during time interval $$\Delta T$$ and $$\mu = \Delta T / N$$.
+Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time. We can all easily agree on $$\mu$$ empirically, because we just count the number of visits $$N$$ during time interval $$\Delta T$$ and then calculate $$\mu = \Delta T / N$$.
 
 Here I describe my model of the process, including plausibility arguments.
 
@@ -87,10 +87,10 @@ Here I describe my model of the process, including plausibility arguments.
 
 #### Interval till first arrival
 * If the PEV is traveling with perfect periodicity of $$T=\mu$$, then the time until its first arrival, $$\lambda_0$$, is randomly drawn from a uniform distribution $$\lambda_0 \sim \mathrm{uniform}[0, \mu]$$, since the phase of the parking vehicle's loop is uncorrelated with your own arrival.
-* However, if the PEV arrives with total non-periodicity, then its arrival time is given by a negative exponential distribution, $$\lambda_0 \sim \lambda e^{-\lambda t}$$, as mentioned above, because there's no maximum lap time--though there is a very small chance, the PEV could take days before arriving at the car.
+* However, if the PEV arrives with total non-periodicity, then its arrival time is given by a negative exponential distribution, $$\lambda_0 \sim \lambda e^{-\lambda t}$$ = $$\mathrm{exponential}(1/\mu)$$(where $$\lambda = 1/\mu$$), as mentioned above, because there's no maximum lap time.
 * The combination of these two behaviors---perfectly periodic and perfectly non-periodic---we capture with a weighted sum between the two, where $$\sigma/\mu$$ is the weight:
 
-$$\lambda_0 = \sigma/\mu (\mathrm{uniform}[0, \mu]) + (1 - \sigma/\mu) (e^{\lambda/t})$$
+$$\lambda_0 \sim (\sigma/\mu) (\mathrm{uniform}[0, \mu]) + (1 - \sigma/\mu) (\mathrm{exponential}(1/\mu))$$
 
 * It's important to note that in this model, $$0< \sigma \leq \mu$$, so this weight will vary over (0, 1].
 
@@ -190,7 +190,7 @@ $$
 So, for a given mean $$\mu$$ and variance $$\sigma^2$$, our actual function call will be
 
 ~~~
-gamma(x, a=(mean/sigma)**2, loc=0, scale=sigma**2 / mean)
+gamma(x, a=(mean/sigma)**2, loc=0, scale=sigma**2/mean)
 ~~~
 
 ## Simulation results
