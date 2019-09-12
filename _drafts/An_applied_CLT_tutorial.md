@@ -1,5 +1,5 @@
 ---
-title: "The central limit theorem: a powerful technology"
+title: "The central limit theorem for error reduction: a powerful technology"
 date:   2019-08-29
 published: true
 sidebar: toc

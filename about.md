@@ -4,15 +4,9 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+I have a background in physics and a penchant for simulating things, I'm writing about statistics for computation. This serves my broader goal of generally trying to better understand how the universe works.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
-
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+I just received a master's in physics from San Jose State University while teaching high school physics.
 
 
-[jekyll-organization]: https://github.com/jekyll
+This website is built using (Jekyll)[https://jekyllrb.com/] and a slightly modified version of the (Minima)[https://github.com/jekyll/minima] theme.

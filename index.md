@@ -4,3 +4,5 @@
 
 layout: home
 ---
+
+![Hawk Hill and Golden Gate Bridge](/images/about_golden_gate_medium.jpg){: .float-right}

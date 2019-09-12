@@ -4,8 +4,14 @@ date:   2019-08-12
 published: true
 sidebar: toc
 layout: post
+excerpt: "Tired of living with the mystery surrounding parking ticket CDFs? Me too! Using a probabilistic model and a Monte Carlo simulation, I quantify the chance of getting a ticket over time, and confirm that, indeed, you are generally safe (< 1% chance) parking a few minutes over the time limit. Surprisingly, the randomness of visits, assuming fixed mean time, doesn't largely affect ticketing probability."
+thumb: "/images/parking_thumb.jpg"
 ---
 **A Monte Carlo Simulation that looks at parameter dependence on the outcomes.**
+
+![aviators](/images/parking_cartoon1.jpg)
+*This is the caption to this image.*
+
 
 THE CONVERSATION THAT BEGAT THIS STUDY
 

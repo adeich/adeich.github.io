@@ -1,11 +1,14 @@
 ---
-title: "A robust, frequentist model for A/B testing."
-date:   2019-08-29
+title: "A general, frequentist model for A/B testing."
+date:   2019-09-01
 published: true
 sidebar: toc
 layout: post
 permalink: "/A-B-Testing-in-python"
+thumb: "/images/AB_binomial_thumb.png"
+excerpt: "Starting with a broadly adaptable Python code snippet for an A/B hypothesis test, I explain what the statistics behind it mean and what the code's p-value can tell us."
 ---
+
 A/B testing is, at its core, the following puzzle: we run two, slightly different versions of the same experiment: call them versions $$A$$ and $$B$$. After, say, 100 trials of each, we see that one version (say, $$A$$) succeeds slightly more times than $$B$$ does. The question is, is $$A$$ likely to continue its superiority into the future, or is the difference we see in our data due more likely due to random chance?
 
 ### An illustrative example: campaign donation button.
@@ -86,7 +89,7 @@ In the case of this article's canonical A/B test problem, our dataset happens to
 |Two sample sizes are equal | 200 vs 220. Roughly. |
 |Variances are equal | Also roughly. |   
 
-If these assumptions are true, then our t-statistic is
+The t-statistic is defined as
 
 $$t = \frac{\bar {X}_1 - \bar{X}_2}{s_p \cdot \sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}$$
 
@@ -94,9 +97,11 @@ where $$s_p$$, called the *pooled variance*, is
 
 $$ s_p = \sqrt{\frac{\left(n_1-1\right)s_{X_1}^2+\left(n_2-1\right)s_{X_2}^2}{n_1+n_2-2}}. $$
 
- In this case, $$t$$ will follow the [student's t-distribution](https://en.wikipedia.org/wiki/Student%27s_t-distribution):
+If the aforementioned assumptions about our data are true, $$t$$ will follow the [student's t-distribution](https://en.wikipedia.org/wiki/Student%27s_t-distribution):
 
 ![t distribution](/images/AB_t_distribution.png){: .align-center}
+
+The proof that *t* follows the t-distribution is left as an exercise to the reader.
 
 Let's pause to put into perspective why this is so amazing: no matter the dataset, if the above assumptions apply, then the t-statistic will *always* be distributed according to *this* t distribution. The same mean ($$0$$), same variance ($$\approx1$$), same cumulative distribution function, etc.
 
@@ -129,6 +134,26 @@ More directly, we compute this area by plugging our t-statistic into the t distr
 from scipy.stats import t
 
 2 * t.cdf(-2.601, df=1100) # = 0.009411
+~~~~
+
+Also, here is the fast way to run the above calculation, thanks to `scipy.stats`'s convenience function, `ttest_ind_from_stats()`:
+
+~~~~ python
+from scipy.stats import ttest_ind_from_stats
+
+nA, nB = 550., 550.
+kA, kB = 200., 220.
+pA, pB = kA/nA, kB/nB
+
+ttest_ind_from_stats(mean1=kA,
+                     std1 = nA * pA * (1 - pA),
+                     nobs1=nA,
+                     mean2=kB,
+                     std2 = nB * pB * (1 - pB),
+                     nobs2=nB,
+                     equal_var=False)
+
+# Ttest_indResult(statistic=-2.5579810729965056, pvalue=0.010661706527777672)
 ~~~~
 
 #### What it means
