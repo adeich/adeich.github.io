@@ -24,22 +24,22 @@ To predict the actual chance of getting a ticket if you park over the limit by, 
 
 ### The order of events leading to a ticket
 
-To receive a parking ticket, each of the following events *must* happen, and in this order:
+To receive a parking ticket, the following chain of events always occurs:
 
 * The car is parked at time $$t=0$$.
-* Interval *A*: duration until first arrival of enforcement vehicle.
+* Interval **A**: duration until first arrival of enforcement vehicle.
 * The car's 2-hour timer starts.
-* Interval *B*: Repeated, random arrivals, and if two hours hasn't passed since the first arrival, the process continues.
+* Interval **B**: Repeated, random arrivals, and if two hours hasn't passed since the first arrival, the process continues.
 * At the first arrival after two hours, the ticket is given.
 
 ![events](/images/parking_timeline.png)
 
-Evidently there are two windows granting you extra time before your car gets ticketed: the PEV won't show up till *some time* after you park, and won't give you a ticket till *some time* after the actual 2-hour window as elapsed. In this light, our challenge is to describe the expected distribution of the sum of these two, extra time windows.
+Evidently there are two windows here granting you extra time before your car gets ticketed: the PEV won't show up till *some time* after you park, and won't give you a ticket till *some time* after the actual 2-hour window has elapsed. In this light, our challenge is to describe the expected distribution of the sum of these two, extra time windows.
 
-But modeling the overall times---that is, the distribution of time-until-parking-ticket---is, however, a non-trivial problem. The parking enforcement vehicles (*PEV*)s do not arrive at precise, regular intervals; nor do they arrive with perfect randomness. The world is full of noise; the PEV's laps are littered with red lights; various discoveries of illegally parked cars; delivery trucks blocking the way; errant dogs, children, squirrels. The problem becomes, how do we quantify the noise within this periodicity?
+But modeling the total elapsed time-until-ticket turns out, however, to be a non-trivial problem. The parking enforcement vehicles (*PEV*)s do not arrive at precise, regular intervals; nor do they arrive with perfect randomness. The world is full of noise; the PEV's laps are littered with red lights; various discoveries of illegally parked cars; delivery trucks blocking the way; errant dogs, children, squirrels. The problem becomes, how do we quantify the noise within this periodicity?
 
 
-It's also interesting to think about how, even in cases where the PEV is driving without a fixed route (the driver is distracted by a mind-bending audiobook, say), or if there are two or more PEVs on the same beat, there will still be *some* periodicity, due to the physical reason of there being a minimum possible time between two visits (no parking-checker-person, no matter how incredible, could check twice time in the same second). Our model must cover all of these cases.
+Further, even in cases where the PEV is driving without a fixed route (the driver is distracted by a mind-bending audiobook, say), or if there are two or more PEVs on the same beat, there will still be *some* periodicity, due to the physical constraint that there is a minimum possible time between two visits (no parking-checker-person, no matter how incredible, could check twice time in the same second). Our model must cover all of these cases.
 
 Let's illustrate what these two extremes of PEV-visit noisiness look like:
 
@@ -71,7 +71,7 @@ For this simulation I am using property (1), summing up the time between arrival
 
 
 
-### Modeling interval *A*: from parking the car till first PEV arrival.
+### Modeling interval **A**: from parking the car till first PEV arrival.
 We are going to assume that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time. In my simulation, I assume $$\mu=30$$ minutes for the 2-hour parking limit.
 
 Empirically, we can measure $$\mu$$ unambiguously by sitting on the sidewalk beneath a tree and counting the number of visits $$N$$ the PEV comes by during time interval $$\Delta T$$. Then $$\mu = \Delta T / N$$.
@@ -121,7 +121,7 @@ The combination of these two behaviors---perfectly periodic and perfectly non-pe
 
 It's important to note that in this model, $$0< \sigma \leq \mu$$, so the weight $$(\sigma/\mu)$$ will vary over (0, 1]. The noisiness parameter, $$\sigma$$, is introduced in the next section.
 
-### Modeling interval *B*: repeated subsequent arrival intervals until ticket
+### Modeling interval **B**: repeated subsequent arrival intervals until ticket
 Subsequent arrival lap-times are described well by the [Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution):
 
 $$
@@ -130,7 +130,7 @@ $$
  &= \frac{1}{\Gamma(k) \theta^k} x^{k - 1} e^{-\frac{x}{\theta}}.
  \end{align} $$
 
- The gamma distribution applies to processes that are composed of the sum of a large number $$(n \gtrapprox 50)$$ of subsequent, exponentially-drawn events.
+ The gamma distribution applies to processes that are composed of the sum of a large number $$(n \gtrapprox 50)$$ of subsequent, exponentially-drawn events. Which could describe the 50-ish individual segments the PEV must cover in each lap, each of which takes an exponentially-drawn amount of time to pass through (roughly).
 
 
 ~~~~ python
@@ -150,15 +150,12 @@ plt.show()
 ![gamma single](/images/parking_gamma_single.png){: .align-center}
 
 
-The gamma distribution is a sensible choice for this scenario because we can adjust both its mean (which we're keeping in this simulation at a constant $$\mu=30$$ minutes), *and* its standard deviation, $$\sigma$$. Here's what the gamma distribution looks like for various ratios of $$(\sigma/\mu)$$:
+The gamma distribution is a sensible choice for this scenario because we can adjust both its mean, which represents the mean period of visits (and which we're keeping in this simulation at a constant $$\mu=30$$ minutes), *and* its standard deviation, $$\sigma$$. Here's what the gamma distribution looks like for various ratios of $$(\sigma/\mu)$$:
 
+![gamma](/images/parking_gamma.png){: .align-center}
+*For an explanation of these `a` and `scale` formulae, see the Implementation Details section, below. For the full code used to make this plot, see the [jupyter notebook](https://github.com/adeich/little_sci_comp_projects/blob/master/Modeling%20getting%20a%20parking%20ticket.ipynb).*
 
-(For an explanation of these `a` and `scale` formulae, see the Implementation Details section, below. For the full code used to make this plot, see the [jupyter notebook](https://github.com/adeich/little_sci_comp_projects/blob/master/Modeling%20getting%20a%20parking%20ticket.ipynb)).
-
-
-![gamma](/images/parking_gamma.png)
-
-So as $$(\sigma/\mu)$$ approaches 0, the gamma function approaches a spike at $$\mu$$---this is just perfectly periodic visit times! As $$(\sigma/\mu)$$ approaches 1, the gamma function approaches the exponential distribution---this perfectly random visit times, as described in the Interval *A* section, above.
+So as $$(\sigma/\mu)$$ approaches 0, the gamma function approaches a spike at $$\mu$$---this is just perfectly periodic visit times! Likewise, as $$(\sigma/\mu)$$ approaches 1, the gamma function approaches the exponential distribution---this just becomes, then, the perfectly random visit times discussed in the Interval *A* section, above.
 
 Now, with our two parameters $$\mu$$ and $$\sigma$$, we can quantify the amount of randomness vs periodicity, and explore how the ratio affects the time-likelihood dependence for getting a ticket.
 
@@ -191,13 +188,13 @@ Though, as discussed in the results section, below, this is not as useful a repr
 The Jupyter notebook containing all the code and outputs can be found in this [GitHub repository](https://github.com/adeich/little_sci_comp_projects/blob/master/Modeling%20getting%20a%20parking%20ticket.ipynb).
 
 ### Inability to vectorize the arrival time loops
-It would have been great to vectorize[^3] all these sums of random numbers, but because there is the piece-wise condition on the sum, ('add until 2-hours is exceeded'), we need to add subsequent random numbers within a `while` loop. There are faster ways to do this, but with time constraints I implemented my `while` loop in standard python, having to manually keep track of several array indices:
+It would have been great to vectorize[^3] all these sums of random numbers, but because there is the piece-wise condition on the sum, ('add until 2-hours is exceeded'), we need to add subsequent random numbers within a `while` loop. Because the numbers are random, there is not a fixed-length array of numbers to add---sometimes it will be few; sometimes many. There are faster ways to implement this while-loop in Python, but with time constraints I implemented my `while` loop somewhat naively, having to manually keep track of several array indices.
 
 ### Connecting standard Gamma form to that of `scipy.stats.gamma()`
 
-A difficulty in using the `scipy.stats.gamma()` function here is its arguments don't match up with our known values of $$\mu$$ and $$\sigma$$. I derived a conversion formula, as follows.
+A difficulty in using the `scipy.stats.gamma()` function here is that its arguments don't match up with our variables $$\mu$$ and $$\sigma$$. I derived a conversion formula, as follows.
 
-In [scipy.stats.gamma](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gamma.html), the gamma function is called by `gamma.pdf(x, a, loc, scale)`, where `x` is an array of locations (what is the probability density at a given $$x$$?); `a` is a special 'shape' descriptor that does **not** equal $$\sigma$$; `loc` is the origin, always `0` here; and `scale` parameter is, importantly, different than the standard deviation of the gamma distribution.  
+In [scipy.stats.gamma](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gamma.html), the gamma function is called by `gamma.pdf(x, a, loc, scale)`, where `x` is an array of locations ("what is the probability density at a given *x*?"); `a` is a special 'shape' descriptor that does **not** equal $$\sigma$$; `loc` is the origin, always `0` here; and `scale` parameter is, importantly, different than the standard deviation of the gamma distribution.  
 
 Whereas, the standard form of the gamma pdf (see the [wikipedia article](https://en.wikipedia.org/wiki/Gamma_distribution)) is
 
@@ -274,16 +271,16 @@ For visualizing the probability of getting a ticket as a function of how long we
 I've plotted several lines for different values of $$\sigma$$, which represents the noisiness away from perfect periodicity by the PEV.
 
 
-![CDF for long times](/images/parking_CDF_plot_1.png 'title')
+![CDF for long times](/images/parking_CDF_plot_1.png 'title'){: .align-center}
 
  Above, $$(\sigma/\mu)$$ is varied from 0.15 to 1, and there is some varying effect on the CDF, though only for probabilities above ~25%.
 
  Next, let's also look at the behaviors for very small values of $$(\sigma/\mu)$$:
 
 
-![CDF for short times](/images/parking_CDF_plot_2.png 'title')
+![CDF for short times](/images/parking_CDF_plot_2.png 'title'){: .align-center}
 
-Though I expect this precision of periodicity is unlikely in real life, it's very interesting to see the $$\sigma$$-dependent behavior that emerges for small times. I believe this has to do with a sort of aliasing effect. 
+Though I expect this precision of periodicity is unlikely in real life, it's very interesting to see the $$\sigma$$-dependent behavior that emerges for small times. I believe this has to do with a sort of aliasing effect.
 
 ## Results discussion and big-picture takeaways
 Interestingly, up until about 25% ticket probability, there is very little variation, and hence $$\sigma$$-dependency, in time over-parked! This means that *regardless* of where $$(\sigma/\mu)$$ (the noisiness parameter) falls on $$(0, 1]$$, the resulting CDF ends up being roughly the same.
@@ -293,7 +290,7 @@ So, for a 2-hour time limit, I conclude the following rules of thumb. These assu
 
 
 
-|Probability of ticket | Equivalently, odds of ticket |Middle-ish overstay|
+|Probability of ticket | Equivalently, odds of ticket | Parking overstay (approximate) |
 |--| ----------- | ----------- |
 |0.01| 1 in 100 | 5 minutes |
 |0.05| 1 in 20  | 11 minutes |
@@ -301,14 +298,15 @@ So, for a 2-hour time limit, I conclude the following rules of thumb. These assu
 |0.25| 1 in 4   | 25 minutes |
 |0.50| 1 in 2   | 40 minutes |
 |0.75| 3 in 4   | 70 minutes |
-{: .align-center}
+
+
 
 
 
 In reality, parking checkers may come far more or less frequently than 30 minutes; my results scale linearly with your observed measurements of $$\mu$$ and $$\sigma$$.
 
 
-One day I would like to get some friends together with some chairs in the shade in front of my apartment and actually measure the passage of these majestic parking enforcement vehicles.
+One day I would like to set some chairs in the shade in front of my apartment and sit there and actually record data on the passage of these majestic parking enforcement vehicles.
 
 This post is dedicated to the people who drive these three-wheelers---we owe the fairness and availability of public parking in crowded cities to their hard work.
 
