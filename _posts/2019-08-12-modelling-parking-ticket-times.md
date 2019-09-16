@@ -4,60 +4,52 @@ date:   2019-08-12
 published: true
 sidebar: toc
 layout: post
-excerpt: "Tired of living with the mystery surrounding parking ticket CDFs? Me too! Using a probabilistic model and a Monte Carlo simulation, I quantify the chance of getting a ticket over time, and confirm that, indeed, you are generally safe (< 1% chance) parking a few minutes over the time limit. Surprisingly, the randomness of visits, assuming fixed mean time, doesn't largely affect ticketing probability."
+excerpt: "Tired of living with the mystery surrounding parking ticket probability? Me too. Using a statistical model and a Monte Carlo simulation, I quantify the chance of getting a ticket over time, and confirm that, indeed, you are generally safe (< 1% chance) parking a few minutes over the time limit. Surprisingly, the randomness of visits, assuming fixed mean time, doesn't largely affect ticketing probability."
 thumb: "/images/parking_thumb.jpg"
 ---
-**A Monte Carlo Simulation that looks at parameter dependence on the outcomes.**
+**A statistical model, a Monte Carlo Simulation, and a recommendation about safe it is to overpark.**
 
 ![aviators](/images/parking_cartoon1.jpg)
-*This is the caption to this image.*
+*The illegally parked: shiver in your boots!*
 
+In my neighborhood in San Francisco, there is a two-hour time limit for unmetered, free parking. As a frequent car-parker, this yet another source of constant background stress, as I watch the little three-wheeled parking enforcement vehicles glide around the streets, hunting with cold, unyielding diligence the hapless, illegally parked.
 
-THE CONVERSATION THAT BEGAT THIS STUDY
+And until a recent, earth-shattering conversation with my roommate, I have fastidiously moved my car before the exact, 2-hour limit, for fear of yet another $70 ticket. I have received three over the last year (one due to forgetfulness; two to accidentally parking on street cleaning day).
 
->Me: I have to run and move my car, my two-hours is nearly up.
->
->Roommate, who is a math teacher: No hurry. There's basically zero chance of getting a ticket right after the two-hour mark.
->
->Me: What do you think that chance will be after ten minutes?
->
->Roommate and me: Hmm ...
+That is, until a month ago, when a friend, who is a math teacher and generally thoughtful, pointed out that the ticketing odds right at the two-hour mark are exactly zero. Then we wondered what the probability of getting a ticket several minutes after the limit passes. Of that question, the following computer simulation was born.
 
-
-## The physical scenario
-
-### Parking in two-hour zones: a little stressful.
-
-Around my neighborhood in San Francisco, most parking spots have a two-hour time limit, enforced by little three-wheeled vehicles, keeping the local streets functioning healthily. That said, from a driver's perspective, they are a real source of stress. If they pass by your car twice, in the same spot, and if more than two hours have passed between, they leave you a stiff, $70 ticket. Up until recently I have been very careful to move my car before the *exact* two-hour mark. However, my roommate and other friends have recently pointed out to me that there are several physical effects which cause there to be zero chance of getting a ticket at precisely the two-hour mark.
-
-To predict the actual chance of getting a ticket if you park over the limit by, say, 1 minute, or a 10 minutes, I've built a model of ticket vehicle visits, and, through numerical simulation, made some predictions about ticketing likelihood. Results are are summarized at the end of this article.
-
-
+To predict the actual chance of getting a ticket if you park over the limit by, say, 1 minute, or a 10 minutes, I've built a probabilistic model of ticket vehicle visits, and, through numerical simulation, made predictions about ticketing likelihood as a function of time. Results are are summarized at the end of this article.
 
 
 ## Thinking about a model for this process
 
 ### The order of events leading to a ticket
-Let's review the fundamentals here.
 
-1. You park your car.
-2. After some initial time interval, the parking person first arrives at your car.
-3. Several intermediate arrivals, but if two hours hasn't passed since the first arrival, nothing changes.
-4. At the first arrival after the two-hour mark, the ticket is given.
 
-This is a non-trivial problem because the parking enforcement vehicles (*PEV*) do not arrive at precise, regular intervals.
 
-### Periodicity, or lack thereof
-The arrival of the parking enforcement vehicle (*PEV*) is highly periodic, but not perfectly so. The PEV does laps (a sensical, repeating pattern, centered on a certain frequency) yet also it drives the streets of a noisy, random world, full of varying cars illegally parked, children and dogs running out into the road, delivery truck blocking the way. So the PEV will not arrive with perfect periodicity---there will be some kind of random noise added to the baseline consistent visit intervals.
+I've labeled the fundamental ordering of events leading to a parking ticket:
 
-It's also interesting to think about how, even in cases where the PEV is driving without a fixed route (the driver is distracted by an mind-bending audiobook, say), or if there are two or more PEVs on the same beat, there will still be *some* periodicity, due to the physical reason of there being a minimum possible time between two visits.
+* The car is parked at time $$t=0$$.
+* Interval A: duration until first arrival of enforcement vehicle.
+* The car's 2-hour timer starts.
+* Interval B: Repeated, random arrivals, and if two hours hasn't passed since the first arrival, the process continues.
+* At the first arrival after two hours, the ticket is given.
 
-Let's illustrate these two extremes of PEV visits:
+![events](/images/parking_timeline.png)
+
+Evidently there are two time windows granting free, extra time before cars get ticketed, since the PEV won't show up till some time after you park, and won't give you a ticket till some time after you pass the legal time limit.
+
+Modeling the overall times---that is, the distribution of time-until-parking-ticket---however, is a non-trivial problem because the parking enforcement vehicles (*PEV*)s do not arrive at precise, regular intervals; nor do they arrive with perfect randomness. The world is full of noise; the PEV's laps are littered with red lights; various numbers of illegally parked cars; delivery trucks blocking the way; errant dogs, children, squirrels. The problem becomes, how do we quantify the noise within this periodicity?
+
+
+It's also interesting to think about how, even in cases where the PEV is driving without a fixed route (the driver is distracted by a mind-bending audiobook, say), or if there are two or more PEVs on the same beat, there will still be *some* periodicity, due to the physical reason of there being a minimum possible time between two visits (no parking-checker-person, no matter how incredible, could check twice time in the same second).
+
+Let's illustrate what these two extremes of PEV-visit noisiness look like:
 
 {% capture notice-2 %}
 **Perfectly periodic** visits over a 120-minute window (mean period $$\mu = 12$$)
 
-![CDF for long times](/images/parking_periodic.png 'title'){: .align-center}
+![CDF for long times](/images/parking_periodic.png 'title')
 {% endcapture %}
 
 <div class="notice">{{ notice-2 | markdownify }}</div>
@@ -66,15 +58,14 @@ Let's illustrate these two extremes of PEV visits:
 {% capture notice-3 %}
 **Perfectly non-periodic** visits (drawn from a uniform distribution with again $$\mu=12$$)
 
-![CDF for long times](/images/parking_non_periodic.png 'title'){: .align-center}
+![CDF for long times](/images/parking_non_periodic.png 'title')
 {% endcapture %}
 <div class="notice">{{ notice-3 | markdownify }}</div>
 
-It is fascinating that to humans, this author very much included, truly random events often don't match our feelings of what randomness should look like, at least not without a lot of re-training of our intuition. To me, the random data points look like they tend to arrive in clumps; as though there's a certain intelligence behind them.
 
 This latter distribution is very common in the natural world: any non-correlated i.i.d.[^2] events, such as photons from constant-intensity source hitting a detector, or rain drops striking a tin roof, or births happening around the world.
 
-This perfectly random case is called a Poisson process, about which we know the following, useful properties:
+This perfectly random case is called a Poisson process, about which we know these two distributions:
 1. The probability density function (pdf) for the time between arrivals is drawn from a negative exponential distribution,
 $$f(t) = \lambda e^{-\lambda t}$$, where the mean arrival time is $$\mu = 1/\lambda$$.
 2. The probability of observing $$N$$ events during $$\mu$$ interval-per-event , or, equivalently, $$\lambda$$ events-per-interval (because $$\mu=1/\lambda$$) is $$P(n=N)=e^{-\lambda}\frac{\lambda^n}{n!}$$.  
@@ -82,25 +73,59 @@ $$f(t) = \lambda e^{-\lambda t}$$, where the mean arrival time is $$\mu = 1/\lam
 For this simulation I am using property (1), summing up the time between arrivals, though it would also work to have designed the simulation around (2); the latter would require a different set of physical models about the PEV lap.
 
 
-A big question here is: how do we capture this quasi-periodicity with our probabilistic model?
+### Modeling the visit times of the parking enforcement vehicle.
+We are going to assume that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time. For the actual simulation, we assume $$\mu=30$$ minutes for the 2-hour parking limit.
 
-### My proposed solution and model for the visit times.
-Say that the parking enforcement vehicle (PEV) arrives, on average, every $$\mu$$ minutes---this is the mean wait time. We can all easily agree on $$\mu$$ empirically, because we just count the number of visits $$N$$ during time interval $$\Delta T$$ and then calculate $$\mu = \Delta T / N$$.
+Empirically, we can measure $$\mu$$ unambiguously by sitting on the sidewalk and counting the number of visits $$N$$ the PEV comes by during time interval $$\Delta T$$ --- then $$\mu = \Delta T / N$$.
 
-Here I describe my model of the process, including plausibility arguments.
 
-* Time *t=0* starts at the moment you park the car.
+#### Interval A: from parking the car till first PEV arrival
+If the PEV is traveling with perfect periodicity of $$\sigma=\mu$$, then the time until its first arrival, $$\lambda_0$$, is randomly drawn from a uniform distribution $$\lambda_0 \sim \mathrm{uniform}[0, \sigma]$$, since the phase of the parking vehicle's loop is uncorrelated with your own arrival:
 
-#### Interval till first arrival
-* If the PEV is traveling with perfect periodicity of $$T=\mu$$, then the time until its first arrival, $$\lambda_0$$, is randomly drawn from a uniform distribution $$\lambda_0 \sim \mathrm{uniform}[0, \mu]$$, since the phase of the parking vehicle's loop is uncorrelated with your own arrival.
-* However, if the PEV arrives with total non-periodicity, then its arrival time is given by a negative exponential distribution, $$\lambda_0 \sim \lambda e^{-\lambda t}$$ = $$\mathrm{exponential}(1/\mu)$$(where $$\lambda = 1/\mu$$), as mentioned above, because there's no maximum lap time.
-* The combination of these two behaviors---perfectly periodic and perfectly non-periodic---we capture with a weighted sum between the two, where $$\sigma/\mu$$ is the weight:
+~~~~ python
+from scipy.stats import expon
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(1, 1)
+x = np.linspace(0, 50, 100)
+ax.set_ylabel('probability density')
+ax.set_xlabel('Time till next arrival (minutes)')
+ax.set_title('Uniform distribution, $\sigma$ = 30 minutes')
+ax.plot(x, uniform.pdf(x),
+       'b-', lw=3, alpha=0.6)
+plt.show()
+~~~~
 
-$$\lambda_0 \sim (\sigma/\mu) (\mathrm{uniform}[0, \mu]) + (1 - \sigma/\mu) (\mathrm{exponential}(1/\mu))$$
 
-* It's important to note that in this model, $$0< \sigma \leq \mu$$, so this weight will vary over (0, 1].
+![parking time](/images/parking_uniform.png){: .align-center}
 
-#### All subsequent arrival intervals
+If, however, the PEV instead arrives with total non-periodicity (that is, with perfect randomness), then its arrival time is given by a negative exponential distribution, $$\lambda_0 \sim \lambda e^{-\lambda t}$$ = $$\mathrm{exponential}(1/\mu)$$, where $$\lambda = 1/\mu$$:
+
+
+~~~~ python
+from scipy.stats import expon
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(1, 1)
+scale = 30.
+x = np.linspace(expon.ppf(0.01, scale=scale),
+                expon.ppf(0.99, scale=scale), 100)
+ax.set_ylabel('probability density')
+ax.set_xlabel('Time till next arrival (minutes)')
+ax.set_title('Exponential distribution, $\mu$ = 30 minutes')
+ax.plot(x, expon.pdf(x, scale=scale),
+       'r-', lw=3, alpha=0.6, label='expon pdf')
+~~~~
+
+![parking time](/images/parking_exponential.png){: .align-center}
+Interestingly, the exponential distribution says there's no maximum time between visits---if it's perfectly random, the PEV could take an indefinitely long time, though the likelihood of this shrinks towards zero.
+
+
+The combination of these two behaviors---perfectly periodic and perfectly non-periodic---we capture with a weighted sum between the two, where $$\sigma/\mu$$ is the weight:
+
+ $$\mathrm{Interval \,\,A} \sim (\sigma/\mu) (\mathrm{uniform}[0, \mu]) + (1 - \sigma/\mu) (\mathrm{exponential}(1/\mu))$$
+
+It's important to note that in this model, $$0< \sigma \leq \mu$$, so this weight will vary over (0, 1].
+
+#### Interval B: repeated subsequent arrival intervals until ticket
 * Subsequent arrival intervals are then given by the Gamma distribution:
 
 $$\lambda_i = \mathrm{gamma}(a, \mu, \sigma),$$
@@ -207,7 +232,7 @@ For visualizing the probability of getting a ticket as a function of how long we
 There are different lines for different values of $$\sigma$$, which represents the noisiness away from perfect periodicity by the PEV.
 
 
-![CDF for long times](/images/parking_CDF_plot_1.png 'title'){: .align-center}
+![CDF for long times](/images/parking_CDF_plot_1.png 'title')
 
  Above, $$\sigma/\mu$$ is varied from 0.15 to 1, and there is some varying effect on the CDF.
 

@@ -14,9 +14,9 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Aaron's Pythonic Data Science Blog
-email: your-email@example.com
+#email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  I write about fundamental concepts of data science and some of my own simulation work,
+  I write about fundamental concepts of data science and my own simulation work,
   all centered around practical implementations in Python.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
@@ -30,7 +30,7 @@ theme: minima
 plugins:
   - jekyll-feed
 
-show_excerpts: true 
+show_excerpts: true
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
