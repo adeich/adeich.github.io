@@ -4,7 +4,7 @@ date:   2019-08-12
 published: true
 sidebar: toc
 layout: post
-excerpt: "Tired of living with the mystery surrounding parking ticket probability? Me too. Using a statistical model and a Monte Carlo simulation, I quantify the chance of getting a ticket over time, and confirm that, indeed, you are generally safe (< 1% chance) parking a few minutes over the time limit. Surprisingly, the randomness of visits, assuming fixed mean time, doesn't largely affect ticketing probability."
+excerpt: "Applying a statistical model and a Monte Carlo simulation, I quantify the chance of getting a ticket over time, and confirm that, indeed, you are generally safe (< 1% chance) parking a few minutes over the time limit. Surprisingly, the randomness of visits, assuming fixed mean time, doesn't largely affect ticketing probability."
 thumb: "/images/parking_thumb.jpg"
 ---
 **A statistical model, a Monte Carlo Simulation, and a recommendation about safe it is to overpark.**
