@@ -1,6 +1,9 @@
 /**
  * Site header
  */
+ @import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
+
+
 $base-line-height: 1.5;
 $header-background-color: #428fe3;
 $main-text-color: #edf4ff;
@@ -16,10 +19,11 @@ $main-text-color: #edf4ff;
 }
 
 .site-title {
-    font-size: 26px;
+    //font-size: 26px;
+    font: 26px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
 /* 		margin-top: 15px;
     line-height: 40px; */
-    letter-spacing: -1px;
+    letter-spacing: 0px;
     margin-bottom: 0;
     float: left;
     font-weight: 500;
@@ -162,7 +166,7 @@ z-index:999;
     .page-link {
         color: $main-text-color;
         //background: orange;
-        line-height: 2.5 ;
+        line-height: 1.5 ;
         font-size: 14px;
         // Gaps between nav items, but not on the first one
         &:not(:first-child) {
