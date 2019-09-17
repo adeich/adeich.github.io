@@ -62,7 +62,7 @@ $main-text-color: #edf4ff;
 }
 
 .site-nav .menu > li {
-	border-bottom: 3px solid transparent;
+	border-bottom: 2px solid transparent;
 	display: inline-block;
 	height: 23px;
 	line-height: normal;
@@ -109,7 +109,7 @@ color: purple;
 
 
 .sub-menu {
-	border: 3px solid transparent;
+	border: 1px solid transparent;
 	border-top: 0;
 	/* bg and border colors set in header */
 	box-shadow: 0 2px 2px rgba(0,0,0,0.4);
@@ -133,7 +133,7 @@ z-index:999;
 	border-bottom: 0;
 	display: block;
 	height: auto;
-	margin: 3px 0;
+	margin: 1px 0;
 	padding: 0;
 	text-align: left;
 }
@@ -162,7 +162,7 @@ z-index:999;
     .page-link {
         color: $main-text-color;
         //background: orange;
-        line-height: $base-line-height;
+        line-height: 2.5 ;
         font-size: 14px;
         // Gaps between nav items, but not on the first one
         &:not(:first-child) {

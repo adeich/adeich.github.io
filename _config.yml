@@ -17,10 +17,11 @@ title: Aaron Deich
 #email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
   I write about fundamental concepts of data science and my own simulation work,
-  all centered around practical implementations in Python.
+   centered around practical implementations in Python.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "adeich.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  adeich
+email: ""
 
 mathjax: true
 
