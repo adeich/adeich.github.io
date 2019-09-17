@@ -4,7 +4,7 @@ date:   2019-08-12
 published: true
 sidebar: toc
 layout: post
-excerpt: "Applying a statistical model and a Monte Carlo simulation, I quantify the chance of getting a ticket over time, and confirm that, indeed, you are generally safe (< 1% chance) parking a few minutes over the time limit. Surprisingly, the randomness of visits, assuming fixed mean time, doesn't largely affect ticketing probability."
+excerpt: "Applying a statistical model with a Monte Carlo simulation, I quantify the chance of getting a ticket over time, and confirm that, indeed, you are safe (< 1% chance) parking a few minutes over the time limit. Surprisingly, the randomness of visits, assuming fixed mean time, doesn't largely affect ticketing probability."
 thumb: "/images/parking_thumb.jpg"
 ---
 **A statistical model, a Monte Carlo Simulation, and a recommendation about safe it is to overpark.**
@@ -305,16 +305,19 @@ So, for a 2-hour time limit, I conclude the following rules of thumb. These assu
 
 In reality, parking checkers may come far more or less frequently than 30 minutes; my results scale linearly with your observed measurements of $$\mu$$ and $$\sigma$$.
 
+Another useful way of thinking about the cost of parking ticket is to multiply the chance of getting a ticket by the cost of a ticket. For example, if there is a 1% ticketing chance for staying 5 minutes over, and a ticket costs $70, then you are essentially paying 1% $$\times$$ $70 = $0.70 whenever you park this much over the limit.
 
-One day I would like to set some chairs in the shade in front of my apartment and sit there and actually record data on the passage of these majestic parking enforcement vehicles.
+#### Future Directions
+One day I would like to set some chairs in the shade in front of my apartment and sit there with friends and actually record data on the passage of these majestic parking enforcement vehicles. Then, the puzzle of actually matching $$\sigma$$ to the data, including consideration of confidence intervals, would be a very interesting investigation.
 
+#### Epilogue
 This post is dedicated to the people who drive these three-wheelers---we owe the fairness and availability of public parking in crowded cities to their hard work.
 
 ![parking vehicle](/images/parking_metervehicle.png 'title'){: .align-center}
 
 
 ### References and further reading
-* I recommend reading the [bus arrival time simulation blog post](https://jakevdp.github.io/blog/2018/09/13/waiting-time-paradox/) by Jake VanderPlas in 2018.
+I recommend reading the [bus arrival time simulation blog post](https://jakevdp.github.io/blog/2018/09/13/waiting-time-paradox/) by Jake VanderPlas in 2018.
 
 
 [^2]: Independent and identically-distributed random variable [wikipedia article](https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables).
