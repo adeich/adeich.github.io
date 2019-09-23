@@ -1,6 +1,6 @@
 ---
 title: "How Safe Is It To Park Over The Time Limit?"
-date:   2019-08-12
+date:  2019-09-16
 published: true
 sidebar: toc
 layout: post
@@ -94,7 +94,7 @@ plt.show()
 
 ![parking time](/images/parking_uniform.png){: .align-center}
 
-If, however, the PEV instead arrives with total non-periodicity (that is, with perfect randomness), then its arrival time is given by a negative exponential distribution, $$\lambda_0 \sim \lambda e^{-\lambda t}$$ = $$\mathrm{exponential}(1/\mu)$$, where $$\lambda = 1/\mu$$:
+If, however, the PEV instead arrives with total non-periodicity (that is, with perfect randomness), then its arrival time is given by a [negative exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution), $$\lambda_0 \sim \lambda e^{-\lambda t}$$ = $$\mathrm{exponential}(t/\mu)$$, where $$\lambda = 1/\mu$$:
 
 
 ~~~~ python
@@ -146,6 +146,8 @@ ax.plot(x, gamma.pdf(x, a=(mean/sigma)**2, loc=0, scale=sigma**2 / mean), 'k-', 
 
 plt.show()
 ~~~~
+*For an explanation of these `a` and `scale` formulae, see the Implementation Details section, below.*
+
 
 ![gamma single](/images/parking_gamma_single.png){: .align-center}
 
@@ -153,7 +155,7 @@ plt.show()
 The gamma distribution is a sensible choice for this scenario because we can adjust both its mean, which represents the mean period of visits (and which we're keeping in this simulation at a constant $$\mu=30$$ minutes), *and* its standard deviation, $$\sigma$$. Here's what the gamma distribution looks like for various ratios of $$(\sigma/\mu)$$:
 
 ![gamma](/images/parking_gamma.png){: .align-center}
-*For an explanation of these `a` and `scale` formulae, see the Implementation Details section, below. For the full code used to make this plot, see the [jupyter notebook](https://github.com/adeich/little_sci_comp_projects/blob/master/Modeling%20getting%20a%20parking%20ticket.ipynb).*
+*For the full code used to make this plot, see the [jupyter notebook](https://github.com/adeich/little_sci_comp_projects/blob/master/Modeling%20getting%20a%20parking%20ticket.ipynb).*
 
 So as $$(\sigma/\mu)$$ approaches 0, the gamma function approaches a spike at $$\mu$$---this is just perfectly periodic visit times! Likewise, as $$(\sigma/\mu)$$ approaches 1, the gamma function approaches the exponential distribution---this just becomes, then, the perfectly random visit times discussed in the Interval *A* section, above.
 
@@ -162,7 +164,9 @@ Now, with our two parameters $$\mu$$ and $$\sigma$$, we can quantify the amount 
 
 ### Putting it all together into a Monte Carlo simulation
 
-For each parking ticket trial, a single time is drawn for interval *A*, as described above. Then, for interval *B*, we keep adding times drawn from the associated gamma distribution to the total elapsed time until two-hours is exceeded, at which point we record the total elapsed time.
+[Monte Carlo simulations](https://en.wikipedia.org/wiki/Monte_Carlo_method) are a computational method, using computer-generated random numbers, to study the shape of arbitrary probability distributions which would otherwise be difficult, if not impossible, to solve on paper. The Monte Carlo operation, at heart, involves designing a (pseudo)random number generator, as we've done above, then running it enough times that the histogram (or any statistic, generally) of its output begins to stabilize, as described by the [Law of Large Numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers).
+
+Our Monte Carlo generator works as follows: For each parking ticket trial, a single time is drawn for interval *A*, as described above. Then, for interval *B*, we keep adding times drawn from the associated gamma distribution to the total elapsed time until two-hours is exceeded, at which point we record the total elapsed time. We keep running trials and adding their resulting durations to a list until the shape of that list's distribution becomes clear.
 
 Or, to express the form of the Monte Carlo simulation in pseudocode:
 {% highlight guess_lang %}
@@ -182,7 +186,8 @@ I found that the histogram (which will begin to approximate the true [probabilit
 Here's what a histogram of this simulation's typical output looks like:
 
 ![CDF for long times](/images/parking_hist_example.png 'title'){: .align-center}
-Though, as discussed in the results section, below, this is not as useful a representation of the data for our purposes as a cumulative distribution function (CDF) view.
+
+Though, as discussed in the results section, below, a histogram turns out not to be as useful a visualization of the distribution for answering our ticketing-probability questions as is a cumulative distribution function (CDF) plot.
 
 ## Implementation details
 The Jupyter notebook containing all the code and outputs can be found in this [GitHub repository](https://github.com/adeich/little_sci_comp_projects/blob/master/Modeling%20getting%20a%20parking%20ticket.ipynb).
@@ -283,7 +288,7 @@ I've plotted several lines for different values of $$\sigma$$, which represents 
 Though I expect this precision of periodicity is unlikely in real life, it's very interesting to see the $$\sigma$$-dependent behavior that emerges for small times. I believe this has to do with a sort of aliasing effect.
 
 ## Results discussion and big-picture takeaways
-Interestingly, up until about 25% ticket probability, there is very little variation, and hence $$\sigma$$-dependency, in time over-parked! This means that *regardless* of where $$(\sigma/\mu)$$ (the noisiness parameter) falls on $$(0, 1]$$, the resulting CDF ends up being roughly the same.
+Interestingly, up until about 25% ticket probability (considering the first plot only), there is very little variation, and hence $$\sigma$$-dependency, in time over-parked! This means that *regardless* of where $$(\sigma/\mu)$$ (the noisiness parameter) falls on $$(0, 1]$$, the resulting CDF ends up being roughly the same.
 
 
 So, for a 2-hour time limit, I conclude the following rules of thumb. These assume that the parking checkers come by every 30 minutes and have a moderate imprecision to how consistent they keep this periodicity. Depending on noisiness, these values will vary only by about 10%, which reflects a reassuring stability of these predictions.
@@ -305,13 +310,13 @@ So, for a 2-hour time limit, I conclude the following rules of thumb. These assu
 
 In reality, parking checkers may come far more or less frequently than 30 minutes; my results scale linearly with your observed measurements of $$\mu$$ and $$\sigma$$.
 
-Another useful way of thinking about the cost of parking ticket is to multiply the chance of getting a ticket by the cost of a ticket. For example, if there is a 1% ticketing chance for staying 5 minutes over, and a ticket costs $70, then you are essentially paying 1% $$\times$$ $70 = $0.70 whenever you park this much over the limit.
+Another useful way of thinking about the cost of parking when there is a mild chance of a ticket is to multiply the chance of getting a ticket by the cost of a ticket. For example, if there is a 1% ticketing chance for staying 5 minutes over, and a ticket costs $70, then you are essentially paying 1% $$\times$$ $70 = $0.70 whenever you park this much over the limit.
 
 #### Future Directions
 One day I would like to set some chairs in the shade in front of my apartment and sit there with friends and actually record data on the passage of these majestic parking enforcement vehicles. Then, the puzzle of actually matching $$\sigma$$ to the data, including consideration of confidence intervals, would be a very interesting investigation.
 
-#### Epilogue
-This post is dedicated to the people who drive these three-wheelers---we owe the fairness and availability of public parking in crowded cities to their hard work.
+#### Dedication
+This post is dedicated to the people who drive these three-wheelers---though they may cause anxiety in anyone whose car is currently parked, there wouldn't have been fair and reasonably available parking in the first place without their hard work.
 
 ![parking vehicle](/images/parking_metervehicle.png 'title'){: .align-center}
 

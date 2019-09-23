@@ -7,10 +7,11 @@
 $base-line-height: 1.5;
 $header-background-color: #428fe3;
 $main-text-color: #edf4ff;
+$bottom-border-color: #e6ecf5;
 
 .site-header {
     border-top: 0px solid gray;
-	  border-bottom: 4px solid #e6ecf5;
+	  border-bottom: 4px solid $bottom-border-color; // $brand-color;
     min-height: 56px;
     background: $header-background-color;
     // Positioning context for the mobile navigation icon
@@ -98,7 +99,7 @@ color: purple;
 	color: blue;
 }
 .site-nav  .sub-menu {
-	background: #ffffff;
+	background: #428fe3;
 	border-color: purple;
 	min-width: 265px;
 

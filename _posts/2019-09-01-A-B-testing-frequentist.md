@@ -1,5 +1,5 @@
 ---
-title: "A general, frequentist model for A/B testing."
+title: "A Python recipe for frequentist A/B testing analysis."
 date:   2019-09-01
 published: true
 sidebar: toc
@@ -9,7 +9,50 @@ thumb: "/images/AB_binomial_thumb.png"
 excerpt: "Starting with a broadly adaptable Python code snippet for an A/B hypothesis test, I explain what the statistics behind it mean and what the code's p-value can tell us."
 ---
 
-A/B testing is, at its core, the following puzzle: we run two, slightly different versions of the same experiment: call them versions $$A$$ and $$B$$. After, say, 100 trials of each, we see that one version (say, $$A$$) succeeds slightly more times than $$B$$ does. The question is, is $$A$$ likely to continue its superiority into the future, or is the difference we see in our data due more likely due to random chance?
+### Example problem: two campaign donation buttons
+Many A/B tests look like this one:
+
+Say you are running the political campaign for a cat, [Meow-Meow Fuzzyface](https://bojackhorseman.fandom.com/wiki/Meow_Meow_Fuzzyface). On the front page of his website, you show one of two campaign advertisements:
+
+1. A positive ad: "Fuzzyface promises laser pointers and democracy for all."
+2. A negative ad, focusing on his opponent: "Reginald Fluffypants wants to take away your civil liberties."
+
+Below this ad is a "Donate" button.
+
+The essential question is: which ad causes more people to donate? You experiment by having your web server randomly serve each version with equal frequency. At the end of a day, you have the following results:
+
+|Ad | Total viewers | Viewers who donated |
+|--|--|--|
+|Attack Ad | $$n_A=550$$ | $$k_A = 200$$ |
+|Positive Ad | $$n_B=550$$ | $$k_B = 218$$ |  
+
+
+Statistically, we end up with the following puzzle: we see that one version (say, $$A$$, for "Attack"), succeeds slightly fewer times than $$B$$ does. The big question is, is $$B$$ likely to continue its superiority into the future, or is the difference we see in our data due more likely due to random chance?
+
+Here is Python code that gives a quantitative answer to the above question:
+
+~~~~ python
+from scipy.stats import ttest_ind_from_stats
+
+nA, nB = 550., 550. # number of trials of each version.
+kA, kB = 200., 218. # number of successes of each version.
+pA, pB = kA/nA, kB/nB # success rate of each version.
+
+ttest_ind_from_stats(mean1=kA,
+                     std1 = nA * pA * (1 - pA),
+                     nobs1=nA,
+                     mean2=kB,
+                     std2 = nB * pB * (1 - pB),
+                     nobs2=nB,
+                     equal_var=False)
+
+
+#>>> Ttest_indResult(statistic=-1.9555367423203238, pvalue=0.0507986134328755)
+~~~~
+
+The very short explanation for what this means: the p-value for this data is 0.05. Assuming that $$A$$ and $$B$$ are equally effective at causing donation clicks, (and assuming everything else about their respective distributions is, in fact, identical), then given 550 views of each, then in 5% of the times we ran this experiment, we would expect to see a difference (218 - 200 = 18) at least as big as what we've observed here.
+
+<!--
 
 ### An illustrative example: campaign donation button.
 You've set your political campaign's website to randomly serve, with equal probability, one of two different videos to viewers: (1) a negative attack ad of the political opponent, Mr. Meow-Meow, and (2) a positive ad for your candidate, Whiskers McGee.
@@ -33,7 +76,12 @@ From this data, our fundamental question "Which version is better?" really break
 
 These are great questions, but they are better served by Bayesian approaches (I highly recommend David Robinson's [article on Bayesian approaches to A/B testing](http://varianceexplained.org/r/bayesian_ab_baseball/), written in R).
 
-Instead, with the frequentist mindset, we say "Let us make some reasonable assumptions about the nature of the data, then ask how likely the data we're seeing is, given those assumptions." In A/B testing, our most fundamental question is whether A and B are equally effective, so our null hypothesis will tend to assume they *are* equally effective and look for how likely or unlikely this hypothesis is, given the data and a few other assumptions.
+-->
+
+Questions about confidence intervals are better served by Bayesian approaches (I highly recommend David Robinson's [article on Bayesian approaches to A/B testing](http://varianceexplained.org/r/bayesian_ab_baseball/), written in R).
+
+
+With the frequentist mindset, we say "Let us make some reasonable assumptions about the nature of the data, then ask how likely the data we're seeing is, given those assumptions." In A/B testing, our most fundamental question is whether A and B are equally effective, so our null hypothesis will tend to assume they *are* equally effective and look for how likely or unlikely this hypothesis is, given the data and a few other assumptions.
 
 To further motivate talking about formal statistical distribution, I want to note that a bar graph, a fundamental visualization of our data, is not very informative to the naked eye about the likelihood of the difference due to chance:
 
@@ -73,7 +121,7 @@ Intuitively, it seems totally plausible that, in reality, the two binomial distr
 
 But it's also totally plausible that $$A$$ and $$B$$ could have the same mean, still resulting in the data we recorded. As NHST (null hypothesis significance testing) frames it, the question becomes "How unlikely would our data be, given an assumed null distribution?". Ok, well how do we *quantify* how unlikely the data is?
 
-#### Choosing a test statistic
+#### Choosing a test statistic for small datasets
 
 Technically, a *statistic* is any function that maps your dataset to a single number. For example, a dataset $$X = \{x_1, x_2, ... x_n\}$$ has mean $$\overline{X}$$ and variance $$\sigma^2_x$$. These latter numbers are both *statistics*, because they are functions of the data with a single numerical output.  A bit confusingly, the word 'statistic' is commonly overloaded to refer either to the function or to a particular value of its output.
 
