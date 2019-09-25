@@ -11,11 +11,11 @@ excerpt: "For amusement, I propose a rain collection device from which π can be
 
 ### Let's be clear: this is not an elegant or quick way to compute $$\pi$$
 
-For example, to efficiently calculate $$\pi$$'s numerical value with limitless precision, there's a neat application from calculus of the [Taylor expansion](https://en.wikipedia.org/wiki/Taylor_series) of arctan:
+For example, to efficiently calculate $$\pi$$'s numerical value with limitless precision, there's a neat application from calculus: The [Taylor expansion](https://en.wikipedia.org/wiki/Taylor_series) of arctan is
 
 $$\mathrm{arctan}(x) = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \cdot\cdot\cdot$$
 
-For why this infinite series is true, check out the [proof of this on math.stackexchange](https://math.stackexchange.com/questions/29649/why-is-arctanx-x-x3-3x5-5-x7-7-dots). So, how to calculate $$\pi$$: since $$\mathrm{arctan}(1)= \pi/4$$, then $$\pi=4 \times \mathrm{arctan}(1)$$, or
+Check out the [proof of this series on math.stackexchange](https://math.stackexchange.com/questions/29649/why-is-arctanx-x-x3-3x5-5-x7-7-dots). So, since $$\mathrm{arctan}(1)= \pi/4$$, then $$\pi=4 \times \mathrm{arctan}(1)$$, or
 
 $$\pi = 4 \times ( 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \cdot\cdot\cdot)$$
 
@@ -144,7 +144,9 @@ ax.legend(by_label.values(), by_label.keys())
 
 I've also plotted the $$1\sigma$$ and $$2\sigma$$ lines predicted by the central limit theorem. The lines appear to be doing a good job approximating the 67% and 95% confidence intervals for the estimates of $$\pi$$.
 
-Now say we didn't actually know the value of $$\pi$$. Let's generate a dataset of relatively small sample size and estimate some confidence intervals, with our (secret) knowledge of the true value of $$\pi$$ serving as a reality check:
+### Generating a dataset for predicting confidence intervals
+
+Say we didn't actually know the value of $$\pi$$. Let's generate a dataset of relatively small sample size and estimate some confidence intervals, using our (secret) knowledge of the true value of $$\pi$$ as a reality check:
 
 ~~~ python
 n, N = 100, 1000
@@ -183,7 +185,7 @@ print("""
 This looks pretty good, yet it turns out we can improve by an order of magnitude the accuracy of our estimate of $$\pi$$ and our confidence interval for it.
 
 ### Bayesian method: Markov Chain Monte Carlo
-The following code is adapted from Jake VanderPlas' illuminating [article](http://jakevdp.github.io/blog/2014/03/11/frequentism-and-bayesianism-a-practical-intro/) about frequentist-vs-Bayesian statistics.
+The following code is adapted from Jake VanderPlas' [illuminating article](http://jakevdp.github.io/blog/2014/03/11/frequentism-and-bayesianism-a-practical-intro/) about frequentist-vs-Bayesian statistics in Python.
 
 ~~~ python
 import emcee
