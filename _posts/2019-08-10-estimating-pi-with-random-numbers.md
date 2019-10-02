@@ -5,8 +5,8 @@ published: true
 sidebar: toc
 layout: post
 permalink: "/estimating-pi-with-random-numbers"
-thumb: ""
-excerpt: "For amusement, I propose a rain collection device from which π can be estimated by the quantities of water it collects, and I simulate the falling rain with datasets of random numbers. The pain purpose of this article is to demonstrate common frequentist and bayesian analysis methods for confidence interval estimates on the generated dataset."
+thumb: "/images/pi_circle_square.png"
+excerpt: "For amusement, I propose a rain collection device from which π can be estimated by the quantities of water it collects, and I simulate the falling rain with datasets of random numbers. The ulterior purpose of this article is to demonstrate common frequentist and bayesian analysis methods for confidence interval estimates on the generated dataset."
 ---
 
 ### Let's be clear: this is not an elegant or quick way to compute $$\pi$$
@@ -15,31 +15,39 @@ For example, to efficiently calculate $$\pi$$'s numerical value with limitless p
 
 $$\mathrm{arctan}(x) = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \cdot\cdot\cdot$$
 
-Check out the [proof of this series on math.stackexchange](https://math.stackexchange.com/questions/29649/why-is-arctanx-x-x3-3x5-5-x7-7-dots). So, since $$\mathrm{arctan}(1)= \pi/4$$, then $$\pi=4 \times \mathrm{arctan}(1)$$, or
+There's a nice proof of this surprisingly simple series on [math.stackexchange](https://math.stackexchange.com/questions/29649/why-is-arctanx-x-x3-3x5-5-x7-7-dots).
+
+So, since $$\mathrm{arctan}(1)= \pi/4$$, then $$\pi=4 \times \mathrm{arctan}(1)$$, or
 
 $$\pi = 4 \times ( 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \cdot\cdot\cdot)$$
 
-The following Python code uses the above formula to generate the first 5 digits of $$\pi$$ in about 3 seconds on my laptop:
+The following Python code uses the above formula to generate the first 6 digits of $$\pi$$ in about 20 seconds on my laptop:
 
 ~~~ python
-magnitude = 6
+magnitude = 7
 total = 0
+powers_of_ten = [10**x for x in range(magnitude)]
 
 for i in range(10**magnitude):
+    # expansion of arctan(1)
     total += (-1)**(i%2) * 1./(2*i + 1)
-    if i in [10**x for x in range(magnitude)]:
+    if i in powers_of_ten:
         print('{}: {}'.format(i, 4 * total))
-
 >>>
-        1: 2.66666666667
-        10: 3.23231580941
-        100: 3.15149340107
-        1000: 3.14259165434
-        10000: 3.14169264359
-        100000: 3.14160265349
+    1: 2.66666666667
+    10: 3.23231580941
+    100: 3.15149340107
+    1000: 3.14259165434
+    10000: 3.14169264359
+    100000: 3.14160265349
+    1000000: 3.14159365359
+    10000000: 3.14159255359
 ~~~
 
-Interestingly, while this is fast for the first few digits of $$\pi$$, each subsequent digit takes exponentially longer to compute---getting the 10th digit would take my laptop several weeks. However, people have long been thinking about [clever ways to compute $$\pi$$](https://en.wikipedia.org/wiki/Approximations_of_%CF%80) and they have been incredibly successful (527 digits of $$\pi$$ calculated *by hand* (!!) in 1873; the current, computer-aided record is ~22 trillion digits in 2019).
+Interestingly, while this is fast for the first few digits of $$\pi$$, each subsequent digit takes exponentially longer to arrive at---getting the 10th digit would take my laptop several weeks. Indeed, examine the list above and you will see that the number of correct digits of $$\pi$$ corresponds closely to the power of 10 of the length of the sum.
+
+
+Because of this insurmountable exponential growth problem, people have long been thinking about [quicker ways to compute $$\pi$$](https://en.wikipedia.org/wiki/Approximations_of_%CF%80) and they have been incredibly successful (527 digits of $$\pi$$ calculated *by hand* (!!) in 1873; the current, computer-aided record is ~22 trillion digits in 2019).
 
 But on to the rain collector.
 
@@ -47,7 +55,7 @@ But on to the rain collector.
 
 Consider a circle inscribed in a square.
 
-![circle square](\images\pi_circle_square.png)
+![circle square](/images/pi_circle_square.png){: .align-center}
 
 The ratio $$q$$ of the area of the circle to that of the square is
 
@@ -61,7 +69,7 @@ $$
 
 or, in terms of *q*, $$\pi=4q$$.
 
-Now let's numerically simulate *q* by piling up lots of uniform, random points (x, y) (raindrops) in the rectangle and count how many of these fall inside the circle. The condition for checking whether a point $$(x, y)$$ is inside a circle of radius 1 is $$x^2 + y^2 < 1$$.
+Now let's numerically simulate *q* by piling up lots of uniform, random points (x, y) (raindrops) in the square and count how many of these fall inside the circle. The condition for checking whether a point $$(x, y)$$ is inside a circle of radius 1 is $$x^2 + y^2 < 1$$.
 
 ~~~ python
 from scipy.stats import uniform
@@ -85,7 +93,7 @@ plt.scatter(a[outside_circle].T[0] + 1, a[outside_circle].T[1] + 1, s=2,
 plt.axis('scaled'); plt.axis('off')
 ~~~
 
-![circle square](\images\pi_circle_square_rain.png){: .align-center}
+![circle square](/images/pi_circle_square_rain.png){: .align-center}
 
 For 10,000 raindrops, here, then, is an estimate of $$\pi$$:
 
@@ -140,7 +148,7 @@ by_label = OrderedDict(zip(labels, handles))
 ax.legend(by_label.values(), by_label.keys())
 ~~~
 
-![sdfs](\images\pi_as_sample_size.png)
+![sdfs](\images\pi_as_sample_size.png){: .align-center}
 
 I've also plotted the $$1\sigma$$ and $$2\sigma$$ lines predicted by the central limit theorem. The lines appear to be doing a good job approximating the 67% and 95% confidence intervals for the estimates of $$\pi$$.
 
