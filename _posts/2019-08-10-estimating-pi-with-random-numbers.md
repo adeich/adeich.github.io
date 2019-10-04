@@ -5,17 +5,17 @@ published: true
 sidebar: toc
 layout: post
 permalink: "/estimating-pi-with-random-numbers"
-thumb: "/images/pi_circle_square.png"
-excerpt: "For amusement, I propose a rain collection device from which π can be estimated by the quantities of water it collects, and I simulate the falling rain with datasets of random numbers. The ulterior purpose of this article is to demonstrate common frequentist and bayesian analysis methods for confidence interval estimates on the generated dataset."
+thumb: "/images/pi_circle_square_thumb.png"
+excerpt: "For amusement, I propose a rain collection device from which π can be estimated by the quantities of water it collects, and I simulate the falling rain with datasets of random numbers. I then use some common frequentist and bayesian analysis methods for estimating confidence intervals on the generated dataset."
 ---
 
 ### Let's be clear: this is not an elegant or quick way to compute $$\pi$$
 
-For example, to efficiently calculate $$\pi$$'s numerical value with limitless precision, there's a neat application from calculus: The [Taylor expansion](https://en.wikipedia.org/wiki/Taylor_series) of arctan is
+For example, as a suprisingly simple formula for calculating $$\pi$$'s numerical value with limitless precision, there's a neat application from calculus: The [Taylor expansion](https://en.wikipedia.org/wiki/Taylor_series) of arctan is
 
 $$\mathrm{arctan}(x) = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \cdot\cdot\cdot$$
 
-There's a nice proof of this surprisingly simple series on [math.stackexchange](https://math.stackexchange.com/questions/29649/why-is-arctanx-x-x3-3x5-5-x7-7-dots).
+There is a nice proof of this series on [math.stackexchange](https://math.stackexchange.com/questions/29649/why-is-arctanx-x-x3-3x5-5-x7-7-dots).
 
 So, since $$\mathrm{arctan}(1)= \pi/4$$, then $$\pi=4 \times \mathrm{arctan}(1)$$, or
 
@@ -154,7 +154,7 @@ I've also plotted the $$1\sigma$$ and $$2\sigma$$ lines predicted by the central
 
 ### Generating a dataset for predicting confidence intervals
 
-Say we didn't actually know the value of $$\pi$$. Let's generate a dataset of relatively small sample size and estimate some confidence intervals, using our (secret) knowledge of the true value of $$\pi$$ as a reality check:
+Say we didn't actually know the value of $$\pi$$. Let's generate a dataset of relatively small sample size and estimate some confidence intervals, using our (secret) knowledge of the true value of $$\pi$$ as a reality check.
 
 ~~~ python
 n, N = 100, 1000
@@ -194,6 +194,20 @@ This looks pretty good, yet it turns out we can improve by an order of magnitude
 
 ### Bayesian method: Markov Chain Monte Carlo
 The following code is adapted from Jake VanderPlas' [illuminating article](http://jakevdp.github.io/blog/2014/03/11/frequentism-and-bayesianism-a-practical-intro/) about frequentist-vs-Bayesian statistics in Python.
+
+In the Bayesian paradigm, we would like to compute the shape of probability distribution $$\pi$$'s true value, given our dataset:
+
+$$\mathrm{P}(\pi_{true} | \mathrm{data}).$$
+
+The math tool we use to compute this probability (which is called, in Bayesian terminology, a **posterior**), is Bayes' Theorem:
+
+$$
+\begin{align}
+\mathrm{posterior} &= \frac{\mathrm{likelihood} \times \mathrm{model\,prior}}{\mathrm{data\,probability}}.
+\end{align}
+$$
+
+
 
 ~~~ python
 import emcee
