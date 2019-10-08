@@ -6,7 +6,7 @@ sidebar: toc
 layout: post
 permalink: "/estimating-pi-with-random-numbers"
 thumb: "/images/pi_circle_square_thumb.png"
-excerpt: "For amusement, I propose a rain collection device from which π can be estimated by the quantities of water it collects, and I simulate the falling rain with datasets of random numbers. I then use some common frequentist and bayesian analysis methods for estimating confidence intervals on the generated dataset."
+excerpt: "For amusement, I propose a rain collection device from which π can be estimated by the quantities of water it collects, and I simulate the falling rain with datasets of random numbers. I then use some common frequentist and bayesian analysis methods for estimating confidence intervals on the estimate of π."
 ---
 
 ### Let's be clear: this is not an elegant or quick way to compute $$\pi$$
@@ -15,9 +15,9 @@ For example, as a suprisingly simple formula for calculating $$\pi$$'s numerical
 
 $$\mathrm{arctan}(x) = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \cdot\cdot\cdot$$
 
-There is a nice proof of this series on [math.stackexchange](https://math.stackexchange.com/questions/29649/why-is-arctanx-x-x3-3x5-5-x7-7-dots).
+(There is a nice proof of this series on [math.stackexchange](https://math.stackexchange.com/questions/29649/why-is-arctanx-x-x3-3x5-5-x7-7-dots)).
 
-So, since $$\mathrm{arctan}(1)= \pi/4$$, then $$\pi=4 \times \mathrm{arctan}(1)$$, or
+Since $$\mathrm{arctan}(1)= \pi/4$$, then $$\pi=4 \times \mathrm{arctan}(1)$$, or
 
 $$\pi = 4 \times ( 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \cdot\cdot\cdot)$$
 
@@ -29,8 +29,7 @@ total = 0
 powers_of_ten = [10**x for x in range(magnitude)]
 
 for i in range(10**magnitude):
-    # expansion of arctan(1)
-    total += (-1)**(i%2) * 1./(2*i + 1)
+    total += (-1)**(i%2) * 1./(2*i + 1) # expansion of arctan(1)  
     if i in powers_of_ten:
         print('{}: {}'.format(i, 4 * total))
 >>>
@@ -44,7 +43,7 @@ for i in range(10**magnitude):
     10000000: 3.14159255359
 ~~~
 
-Interestingly, while this is fast for the first few digits of $$\pi$$, each subsequent digit takes exponentially longer to arrive at---getting the 10th digit would take my laptop several weeks. Indeed, examine the list above and you will see that the number of correct digits of $$\pi$$ corresponds closely to the power of 10 of the length of the sum.
+Interestingly, while this is fast for the first few digits of $$\pi$$, each subsequent digit takes exponentially longer to arrive at---getting the 11th digit would take my laptop several weeks. Indeed, examine the list above and you will see that the number of correct digits of $$\pi$$ corresponds closely to the power of 10 of the length of the sum.
 
 
 Because of this insurmountable exponential growth problem, people have long been thinking about [quicker ways to compute $$\pi$$](https://en.wikipedia.org/wiki/Approximations_of_%CF%80) and they have been incredibly successful (527 digits of $$\pi$$ calculated *by hand* (!!) in 1873; the current, computer-aided record is ~22 trillion digits in 2019).
@@ -69,10 +68,15 @@ $$
 
 or, in terms of *q*, $$\pi=4q$$.
 
-Now let's numerically simulate *q* by piling up lots of uniform, random points (x, y) (raindrops) in the square and count how many of these fall inside the circle. The condition for checking whether a point $$(x, y)$$ is inside a circle of radius 1 is $$x^2 + y^2 < 1$$.
+Now let's numerically simulate *q* by throwing lots of uniform, random points (x, y) (raindrops) onto the square and counting how many of these fall inside the circle. The condition for checking whether a point $$(x, y)$$ is inside a circle of radius 1 is $$x^2 + y^2 < 1$$.
 
 ~~~ python
 from scipy.stats import uniform
+
+a = uniform.rvs(size=(1000, 2)) * 2 - 1
+inside_circle = np.where(np.sqrt(a[:,0]**2 + a[:,1]**2) < 1 )
+outside_circle = np.where(np.sqrt(a[:,0]**2 + a[:,1]**2) > 1 )
+
 fig, ax = plt.subplots(1, 1)
 
 circle = plt.Circle((1, 1), radius=1, facecolor="None",
@@ -80,11 +84,6 @@ circle = plt.Circle((1, 1), radius=1, facecolor="None",
 square = plt.Rectangle((0, 0), 2, 2, facecolor="None",
                       edgecolor='k')
 plt.gca().add_patch(circle); plt.gca().add_patch(square)
-
-a = uniform.rvs(size=(1000, 2)) * 2 - 1
-inside_circle = np.where(np.sqrt(a[:,0]**2 + a[:,1]**2) < 1 )
-outside_circle = np.where(np.sqrt(a[:,0]**2 + a[:,1]**2) > 1 )
-
 plt.scatter(a[inside_circle].T[0] + 1, a[inside_circle].T[1] + 1, s=2,
             marker='o', c='blue', alpha=0.7)
 plt.scatter(a[outside_circle].T[0] + 1, a[outside_circle].T[1] + 1, s=2,
@@ -150,11 +149,26 @@ ax.legend(by_label.values(), by_label.keys())
 
 ![sdfs](\images\pi_as_sample_size.png){: .align-center}
 
-I've also plotted the $$1\sigma$$ and $$2\sigma$$ lines predicted by the central limit theorem. The lines appear to be doing a good job approximating the 67% and 95% confidence intervals for the estimates of $$\pi$$.
+I've also plotted the $$1\sigma$$ and $$2\sigma$$ lines predicted by the [central limit theorem](https://en.wikipedia.org/wiki/Central_limit_theorem). The lines appear to be doing a good job approximating the 67% and 95% confidence intervals for the estimates of $$\pi$$.
+
+As we can see from this plot, this distribution closely follows the central limit theorem's prediction that the standard deviation goes as $$\sigma\approx 1/\sqrt{n}$$. So in answer to the vague question of "how many samples we need to approximate $$\pi$$?", well, for a single simulation's point estimate (the ratio of points inside to points outside the circle), even for $$N=10,000$$, we usually won't do much better than $$\pi\approx 3.14\pm 0.05$$.
+
+For example, the following point estimate uses $$N=100,000$$ points and returns, 3 correct digits of $$\pi$$ about 2/3rds of the time:
+
+~~~ python
+print(v_generate_ratio(100000))
+
+>>> 3.13756
+~~~
+
+This is pretty cool, that by generating lots pairs of uniform random numbers on [-1, 1] and counting which pairs satisfy a certain criterion (those that fall inside a circle of radius 1), we can estimate $$\pi$$. But we can make a much more precise estimate, using the same number of data points.
+
+Let's keep this 100,000-points number in mind, because, as we'll see in the next section, there are ways to make *much* more accurate estimates of $$\pi$$ using this exact same data set (though we'll partition it into smaller chunks). And in addition to increased precision, we will also derive the equally vital information that is the confidence interval estimate for the true value of $$\pi$$ within our random process.
+
 
 ### Generating a dataset for predicting confidence intervals
 
-Say we didn't actually know the value of $$\pi$$. Let's generate a dataset of relatively small sample size and estimate some confidence intervals, using our (secret) knowledge of the true value of $$\pi$$ as a reality check.
+Say we didn't actually know the value of $$\pi$$, and were trying to make our best guess of its value given a laptop and a only a few seconds of computation time. Let's use the same number of points as before ($$N=100,000$$) but, partitioning it into 100 groups each of 1000 pairs, and make an estimate $$\pi$$ once for each. 
 
 ~~~ python
 n, N = 100, 1000
@@ -178,7 +192,7 @@ Here's a histogram of this data:
 ![hist](/images/pi_hist_dataset.png){: .align-center}
 
 
-If we just look at the sample mean and standard deviation here, they do a decent job:
+If we just look at the sample mean and standard deviation of this histogram, *already* they do more precise job estimating $$\pi$$ than our point estimate from earlier:
 
 ~~~ python
 print("""
@@ -190,7 +204,7 @@ print("""
       pi_est  = 3.143 +/- 0.032 (predicted by CLT)
 ~~~
 
-This looks pretty good, yet it turns out we can improve by an order of magnitude the accuracy of our estimate of $$\pi$$ and our confidence interval for it.
+This looks pretty good, yet it turns out we can improve on this precision by an order of magnitude, and using the exact same data!
 
 ### Bayesian method: Markov Chain Monte Carlo
 The following code is adapted from Jake VanderPlas' [illuminating article](http://jakevdp.github.io/blog/2014/03/11/frequentism-and-bayesianism-a-practical-intro/) about frequentist-vs-Bayesian statistics in Python.
