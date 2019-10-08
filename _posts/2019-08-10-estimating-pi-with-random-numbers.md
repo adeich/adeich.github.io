@@ -168,7 +168,7 @@ Let's keep this 100,000-points number in mind, because, as we'll see in the next
 
 ### Generating a dataset for predicting confidence intervals
 
-Say we didn't actually know the value of $$\pi$$, and were trying to make our best guess of its value given a laptop and a only a few seconds of computation time. Let's use the same number of points as before ($$N=100,000$$) but, partitioning it into 100 groups each of 1000 pairs, and make an estimate $$\pi$$ once for each. 
+Say we didn't actually know the value of $$\pi$$, and were trying to make our best guess of its value given a laptop and a only a few seconds of computation time. Let's use the same number of points as before ($$N=100,000$$) but, partitioning it into 100 groups each of 1000 pairs, and make an estimate $$\pi$$ once for each.
 
 ~~~ python
 n, N = 100, 1000
@@ -221,7 +221,11 @@ $$
 \end{align}
 $$
 
+Bayes theorem is at the heart of the following `emcee` module, which implements the [Hastings-Metropolis algorithm](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm). This operates a markov-chain navigation of parameter space according to a simple binary condition on the probability at the current parameter values.
 
+In this particular instance, the parameter space being explored is that of the most likely mean value for our data set; hence the definition of the likelihood function as the sample error defined by the CLT.
+
+As a Markov chain process, `emcee` instantiates multiple 'walkers', which, after a burn-in number of steps (since our starting prior may be very far away from a usefully proximate posterior), then record their paths through sample space, the results of which are outputted as the 'sample' variable. I then plot a histogram of the entirety of these recorded paths; they show us a much more precise estimate of the true mean; this new histogram's variance also works well as a confidence interval for our estimate.
 
 ~~~ python
 import emcee
@@ -285,6 +289,8 @@ The precision increased by a factor of 10!
 
 ### Bootstrapping on the mean of the dataset.
 
+Bootstrapping is the method of computing a metric of interest on random subsets of your data, then looking at the resulting distribution of your metric. Here, I am using the `astropy.stats` bootstrap implementation to sample with replacement. The Central Limit Theorem says that the sample variance goes as $$1/n$$; thus the standard deviation will be a factor of $$\sqrt{\sigma^2} = \sqrt{1/100} = 1/10$$:
+
 ~~~ python
 from astropy.stats import bootstrap
 
@@ -307,3 +313,5 @@ print("""
 ~~~
 
 ![boostrap](/images/pi_boostrap_hist.png){: .align-center}
+
+Indeed, we see that the standard deviation is, like the MCMC result, also about one-tenth that of the simple histogram analysis.
