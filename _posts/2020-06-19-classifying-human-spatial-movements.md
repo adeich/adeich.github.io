@@ -1,37 +1,37 @@
 ---
-title: "Classifying customer spatial movement in retail stores"
+title: "Classifying Customer Spatial Movement In Retail Stores"
 date:   2020-06-19
 published: true
 sidebar: toc
 layout: post
 permalink: "/classifying-human-spatial-movements"
 thumb: "images/classifying_thumb.png"
-excerpt: "Consulting for Pathr, I developed a method for separating spatial trajectories of brick-and-mortar retail stores by customer behavior."
+excerpt: "Consulting for Pathr.ai, I developed a method for separating spatial trajectories of brick-and-mortar retail stores by customer behavior."
 ---
 
-For my Insight project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr is a geospatial analytics company that provides brick-and-mortar businesses, such as retail stores and factories, with real time person spatial movement analysis, helping the store managers and employees understand how customers are moving through their physical space. I developed a set of **trajectory metrics** for Pathr that helps to **sort and classify customer spatial movements according to behavior**. 
+For my Insight project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr is a geospatial analytics company that helps brick-and-mortar businesses understand how people move through their physical space. To help Pathr **sort and classify customer spatial movements according to behavior**, I developed a set of **trajectory metrics**. 
 
 
 
-# Pathr provides real time customer analysis for retail stores by applying AI to security footage
+# **Pathr provides real time customer analysis for retail stores by applying AI to security footage**
 In brick-and-mortar retail, customer store-use analytics are vital. How many customers visit each part of the sales floor, and when? When did a given customer change their minds and decide to buy something?
 
-As e-commerce has taken over low-margin, high-inventory sales, the brick-and-mortar retail industry has shifted towards delivering high-quality customer experience. How customers _feel_ about the physical, in-store human interactions has become a primary driver of brick-and-mortar retail profits. For stores to compete with each other today, let alone with e-commerce, increasingly requires a store's employees to have close understanding of how customers explore and interact with the sales floor.
+As e-commerce websites like Amazon have consumed low-margin, high-inventory sales markets, the brick-and-mortar retail industry has shifted its focus towards high-quality customer experience. How a customer _feels_ about the physical, in-store human interactions has become a primary driver of brick-and-mortar retail profits. For stores to stay competitive today, a store's employees must understand how customers explore and interact with the sales floor.
 
-Over the decades prior, these customer analytics have always been cumbersome to acquire. If a store wanted to estimate the fraction of visiting customers who made a purchase, they would post an employee outside the front door and manually count the number of customers entering the front door. Or if the store wanted to know how frequently customers visited each part of the floor, they'd have to rely on employee gut intuition.
+Before AI, measuring these customer counts was a slow and inaccurate process. If a store wanted to estimate the fraction of visiting customers who made a purchase, say, they would post an employee outside the front door and manually count the number of customers entering the front door.
 
-Meanwhile, in the last several years, computer vision has become highly accurate. And until this year, while virtually all brick-and-mortar stores have wide-coverage, high-quality security camera footage, virtually none have applied AI analysis to this data feed.
+In the last several years, computer vision has become highly accurate. And until this year, while virtually all brick-and-mortar stores have wide-coverage, high-quality security camera footage, virtually none have applied AI analysis to this data.
 
 This is where Pathr has entered the analysis market, first to market as of 2020 with a real time, anonymized computer vision system. Pathr will need to add further data insights to remain competitive in this new market, as several other competitors are working to enter into the retail AI-analysis.
 
-# Pathr transcribes customer trajectories and generates real time analytics
+# **Pathr maps customer spatial movement and generates real time analysis**
 
 ![pipeline](images/classifying_highlevel.png){: .align-center}
 
 
-**The data flow**. A client store streams their video feeds from multiple cameras to Pathr. Pathr then combines these videos with measurements of the store's floor layout and applies computer vision to locate every person in the field of view.
+Here's how Pathr's data flow works: A client store streams the video feeds from multiple cameras. Pathr then applies computer vision to locate every person in the field of view.
 
-This process is carefully anonymizing, as the only data not discarded, for each person in the store, is a 2D (x, y) point which represents the center of that person's AI-determined bounding box. In order to follow each person's progress through the store, the computer vision system assigns them a temporary unique ID that is discarded as soon as the person leaves the field of view.
+Each person in the store is represented by a 2D (x, y) point determined by the center of that person's AI-determined bounding box. In order to follow each person's progress through the store, the computer vision system assigns them a temporary unique ID that is discarded as soon as the person leaves the field of view.
 
 So each trajectory here represents the movement of a single person as a list of (x, y, t) rows, recorded at 30 frames per second:
 
@@ -39,12 +39,11 @@ So each trajectory here represents the movement of a single person as a list of 
 
 Unlike GPS geospatial data, which is only accurate to ~1 meter, Pathr's system presently achieves centimeter-precision in customer location measurement. This is thanks to the pixel density of the typical store's security camera system. So in actual application, if x and y are floats with units of meters, x and y will contain meaningful position information to a depth of ~5 significant figures. There is a lot of detail in this data!
 
-On the flipside of using the center of a bounding box to determine a person's location: if, say, someone stands feet planted but raises one arm to the side, their bounding box is liable to shift. There are many computer visions technicalities like this one that can be improved.
 
-# Pathr has deployed a heatmap analysis and is looking to add trajectory classification
-Presently, Pathr receives client live video, uses AI to locate each person in the field of view, and then provides a heat-map analysis product that answers the fundamental counting question: **how many people visited each part of the store, and when?** This is vital in helping retailers understand how customers use their store.
+# **Pathr is working to add trajectory classification**
+Presently, Pathr provides its retail customers with a heat-map analysis product that answers the fundamental counting question, **"how many people visit each part of the store, and when?""** Answers to this question are vital for businesses to understand how customers use their store.
 
-Meanwhile, Pathr is also working to add **analysis capability of individual customer trajectories** so as to distill motion descriptions and ultimately classify the motion by category. Useful insights from this trajectory analysis include, for example,
+Meanwhile, Pathr is also working to add the ability to analyze each **individual customer trajectory**, so as to classify a customer's behavior real time. Useful insights from such trajectory analysis include, for example,
 
  * distinguishing customers from staff
  * identifying customers who could use assistance from those who are just browsing
@@ -54,7 +53,7 @@ Meanwhile, Pathr is also working to add **analysis capability of individual cust
 
 **Establishing a trajectory classification framework is where my project comes in.**
 
-# Classifying on raw trajectories is hard; we need a way to condense first
+# **Classifying on raw trajectories is difficult**
 
 To restate our high-level goal, given a customer trajectory (a set of ~1000 (x, y, t) rows), we want to  quickly figure out which abstract categories it falls into. Here's why that's difficult.
 
@@ -74,7 +73,7 @@ Due to all of these complications, applying a supervised learning classifier to 
 And at the other end of the abstract-to-concrete spectrum, applying a set of hand-selected rules to trajectories doesn't work well either. For example, if you say "If the trajectory velocity spends more than 80% of the time within X velocity range, then assign it Y label," this usually performs no better than a random guess, since the interesting distinctions arise only in a much higher dimensional space.
 
 
-# I designed a trajectory embedding to distill important trajectory information
+# **I designed a trajectory embedding to distill important trajectory information**
 
 To convert each trajectory into a form that is meaningful to a classifier, I developed a **trajectory embedding**, which is just a fixed set of roughly 100 metrics, computed on each trajectory. So the classification operation becomes: _first_ we map the trajectory through the embedding (essentially a dimensionality reduction operation), _then_ pass the embedded form to the classifier.
 
@@ -83,24 +82,26 @@ To convert each trajectory into a form that is meaningful to a classifier, I dev
 
 
 
-For my embedding, I focused on statistics that distill kinematic information around various rates of change. I chose the following statistics in particular because they **don't depend on the length, sample frequency, or window location of each trajectory**:
+For my embedding, I focused on statistics that distill kinematic information around various rates of change. I chose the following statistics in particular because, while capturing key movement descriptions, they are independent of the trajectory's length, sample frequency, and starting location:
 
 * mean velocity
 * standard deviation of velocity
 * mean acceleration
 * standard deviation of acceleration
 * ratio of bounding rectangle to arc length
-* the lowest 50 fft frequencies.
+* the lowest 50 fft frequencies in both x and y.
 
 After computing these, the embedded trajectories (a ~100-dimensional space) are then rotated via PCA into a space where I keep only the first ~10 principle components. This output, finally, is what I pass to the classifier.
 
-# A pipeline to allow rapid experimentation with different metric sets
+# I designed a pipeline to allow rapid experimentation on metric sets
 
-I realized I'd have to iterate through many combinations of statistics to maximize visual clustering. So, I built a trajectory embedding pipeline which applies an open-ended list of embedding functions, then shows how well the trajectories separate by category.
+I knew I would have to iterate through many combinations of statistics to maximize visual clustering. Further, it seems likely that Pathr will probably require custom metric sets for each new retail space they're analyzing--there is probably not a one-size-fits-all solution, at least not yet.
+
+To address this, I built a trajectory embedding pipeline which applies a purposefully open-ended list of embedding functions, then shows how well the trajectories separate by category.
 
 ![pipeline](/images/classify_pipeline.png){: .align-center}
 
-My pipeline, built on top of `Pandas` and `numpy`, can process about 100MB of trajectory data in about 30-seconds on my older laptop. I was able to try 60+ combinations drawn from 15 statistics functions in a single morning, arriving at the function set I listed, above.
+My pipeline, utilizing high-speed array operations with `Pandas` and `numpy`, can distill about 100MB of trajectory data into a metric set in about 30-seconds on my older laptop. I was able to try 60+ combinations drawn from 15 statistics functions in a few hours, arriving at the function set I listed, above.
 
 Additionally, incorporating future statistics metrics into the set requires no additional pipeline engineering, as it's just a matter of defining a new function and adding its name to the list.
 
@@ -110,7 +111,12 @@ My first proof-of-concept test was a set of shape trajectories -- a simulated da
 
 My second proof-of-concept demonstration was a simulated factory floor, with 135 people moving around, with 3 different behavior roles.
 
-Insights: I found that the simulation data was too artificial for testing classification accuracy.
+Insights:
+
+* Grab-bag of kinematics metrics + PCA works pretty well as a start.
+* Initial metric set achieved high classification accuracy.
+* I found that the simulation data was too artificial for testing classification accuracy.
+* To apply deep learning to learn abstract metrics requires a better processing architecture.
 
 # Future directions:
 
