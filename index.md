@@ -5,4 +5,4 @@
 layout: home
 ---
 
-![Hawk Hill and Golden Gate Bridge](/images/about_golden_gate_small.jpg){: .align-center}
+![Hawk Hill and Golden Gate Bridge](/images/about_golden_gate_small.jpg#frontpic)

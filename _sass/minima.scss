@@ -3,7 +3,7 @@
 // Define defaults for each variable.
 @import url(//db.onlinewebfonts.com/c/0e70b3a23ddb2c7338b99c8c4396a0d1?family=ITC+Charter);
 $base-font-family: "ITC Charter Regular", "Times New Roman", Times, serif;
-$base-font-size:   21px !default;
+$base-font-size:   19px !default;
 $base-font-weight: 400 !default;
 $small-font-size:  $base-font-size * 0.875 !default;
 $base-line-height: 1.5 !default;
@@ -96,4 +96,9 @@ figure figcaption {
 
 .h1 {
   font-weight: bold;
+}
+
+
+img[src*="#frontpic"] {
+  border: 3px solid black;
 }

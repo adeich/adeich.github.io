@@ -9,18 +9,23 @@ thumb: "images/classifying_thumb.png"
 excerpt: "Consulting for Pathr.ai, I developed a method for separating spatial trajectories of brick-and-mortar retail stores by customer behavior."
 ---
 
+![](images/classifying_timelapse.jpeg)
+
+
 For my Insight project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr is a geospatial analytics company that helps brick-and-mortar businesses understand how people move through their physical space. To help Pathr **sort and classify customer spatial movements according to behavior**, I developed a set of **trajectory metrics**. 
 
 
 
-# **Pathr provides real time customer analysis for retail stores by applying AI to security footage**
 In brick-and-mortar retail, customer store-use analytics are vital. How many customers visit each part of the sales floor, and when? When did a given customer change their minds and decide to buy something?
 
-As e-commerce websites like Amazon have consumed low-margin, high-inventory sales markets, the brick-and-mortar retail industry has shifted its focus towards high-quality customer experience. How a customer _feels_ about the physical, in-store human interactions has become a primary driver of brick-and-mortar retail profits. For stores to stay competitive today, a store's employees must understand how customers explore and interact with the sales floor.
+As e-commerce websites like Amazon consume the low-margin, high-inventory sales market, the brick-and-mortar retail industry shifts its focus towards high-quality customer experience. How a customer _feels_ about the physical, in-store human interactions has become a primary driver of brick-and-mortar retail profits. For stores to stay competitive today, a store's employees must understand how customers explore and interact with the sales floor.
 
 Before AI, measuring these customer counts was a slow and inaccurate process. If a store wanted to estimate the fraction of visiting customers who made a purchase, say, they would post an employee outside the front door and manually count the number of customers entering the front door.
 
 In the last several years, computer vision has become highly accurate. And until this year, while virtually all brick-and-mortar stores have wide-coverage, high-quality security camera footage, virtually none have applied AI analysis to this data.
+
+![](images/classifying_timelapse2.jpg)
+
 
 This is where Pathr has entered the analysis market, first to market as of 2020 with a real time, anonymized computer vision system. Pathr will need to add further data insights to remain competitive in this new market, as several other competitors are working to enter into the retail AI-analysis.
 
@@ -84,16 +89,16 @@ To convert each trajectory into a form that is meaningful to a classifier, I dev
 
 For my embedding, I focused on statistics that distill kinematic information around various rates of change. I chose the following statistics in particular because, while capturing key movement descriptions, they are independent of the trajectory's length, sample frequency, and starting location:
 
-* mean velocity
-* standard deviation of velocity
-* mean acceleration
-* standard deviation of acceleration
-* ratio of bounding rectangle to arc length
-* the lowest 50 fft frequencies in both x and y.
+1. mean velocity
+1. standard deviation of velocity
+1. mean acceleration
+1. standard deviation of acceleration
+1. ratio of bounding rectangle to arc length
+1. the lowest 50 fft frequencies in both x and y
 
 After computing these, the embedded trajectories (a ~100-dimensional space) are then rotated via PCA into a space where I keep only the first ~10 principle components. This output, finally, is what I pass to the classifier.
 
-# I designed a pipeline to allow rapid experimentation on metric sets
+# **A pipeline to allow rapid experimentation on metric sets**
 
 I knew I would have to iterate through many combinations of statistics to maximize visual clustering. Further, it seems likely that Pathr will probably require custom metric sets for each new retail space they're analyzing--there is probably not a one-size-fits-all solution, at least not yet.
 
@@ -105,7 +110,7 @@ My pipeline, utilizing high-speed array operations with `Pandas` and `numpy`, ca
 
 Additionally, incorporating future statistics metrics into the set requires no additional pipeline engineering, as it's just a matter of defining a new function and adding its name to the list.
 
-# Proof-of-concept dataset analysis
+# **Proof-of-concept dataset analysis**
 
 My first proof-of-concept test was a set of shape trajectories -- a simulated dataset composed of 100 circles, 100 rectangles, and 100 triangles.
 
