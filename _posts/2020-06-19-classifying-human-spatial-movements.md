@@ -9,27 +9,28 @@ thumb: "images/classifying_thumb.png"
 excerpt: "Consulting for Pathr.ai, I developed a method for separating spatial trajectories of brick-and-mortar retail stores by customer behavior."
 ---
 
+For my Insight project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr uses computer vision to help brick-and-mortar businesses understand how people move through their physical space. To allow Pathr to begin to **classify customer spatial movements**, I established a set of **trajectory metrics** and an accompanying trajectory analysis pipeline. 
+
+
+
 ![](images/classifying_timelapse.jpeg)
 
 
-For my Insight project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr is a geospatial analytics company that helps brick-and-mortar businesses understand how people move through their physical space. To help Pathr **sort and classify customer spatial movements according to behavior**, I developed a set of **trajectory metrics**. 
+# **Customer spatial analysis, now more important than ever, is becoming automated**
 
+How many customers visit each part of the sales floor, and when? At what point do customers change their minds and decide to make a purchase? Which types of customer-staff interactions lead to higher store profits?
 
-
-In brick-and-mortar retail, customer store-use analytics are vital. How many customers visit each part of the sales floor, and when? When did a given customer change their minds and decide to buy something?
+These are fundamental questions for anyone looking to run a competitive retail store today.
 
 As e-commerce websites like Amazon consume the low-margin, high-inventory sales market, the brick-and-mortar retail industry shifts its focus towards high-quality customer experience. How a customer _feels_ about the physical, in-store human interactions has become a primary driver of brick-and-mortar retail profits. For stores to stay competitive today, a store's employees must understand how customers explore and interact with the sales floor.
 
-Before AI, measuring these customer counts was a slow and inaccurate process. If a store wanted to estimate the fraction of visiting customers who made a purchase, say, they would post an employee outside the front door and manually count the number of customers entering the front door.
+Until this decade, if you wanted to gather such customer data for your store, you faced a slow and inaccurate process. To estimate the fraction of visiting customers who made a purchase, say, a store would post an employee outside the front door and manually count for hours the number of customers entering the front door--headaches galore.
 
-In the last several years, computer vision has become highly accurate. And until this year, while virtually all brick-and-mortar stores have wide-coverage, high-quality security camera footage, virtually none have applied AI analysis to this data.
+Over the last decade computer vision has been steadily improving in its accuracy and ease of implementation. All the while, virtually all brick-and-mortar sales floors are covered by high-quality security camera footage. And, until 2020, virtually no one has applied AI analysis to their data.
 
-![](images/classifying_timelapse2.jpg)
+This is where Pathr comes in: the first to market, as of mid-2020, with an anonymized computer vision system that produces an automated heat map analysis for retail stores. And the heat map updates in real time. Moving beyond this early success, Pathr will need to add further data insights to remain competitive in this new market, as several other competitors are working to enter into this retail AI space.
 
-
-This is where Pathr has entered the analysis market, first to market as of 2020 with a real time, anonymized computer vision system. Pathr will need to add further data insights to remain competitive in this new market, as several other competitors are working to enter into the retail AI-analysis.
-
-# **Pathr maps customer spatial movement and generates real time analysis**
+# **How Pathr maps customer spatial movement and generates real time analysis**
 
 ![pipeline](images/classifying_highlevel.png){: .align-center}
 
@@ -42,45 +43,49 @@ So each trajectory here represents the movement of a single person as a list of 
 
 ![pipeline](/images/classify_single_trajectory.png){: .align-center}
 
-Unlike GPS geospatial data, which is only accurate to ~1 meter, Pathr's system presently achieves centimeter-precision in customer location measurement. This is thanks to the pixel density of the typical store's security camera system. So in actual application, if x and y are floats with units of meters, x and y will contain meaningful position information to a depth of ~5 significant figures. There is a lot of detail in this data!
+Unlike GPS geospatial data, which is only accurate to ~1 meter, Pathr's system presently achieves centimeter-precision in customer location measurement. This is thanks to the high pixel density of the typical store's security camera system.
 
+So in actual application, if x and y are floats with units of meters, x and y will contain meaningful position information to a depth of ~5 significant figures. There is a lot of detail in this data!
+
+
+Presently, Pathr provides its retail customers with a heat-map analysis product that answers the fundamental counting question, **"how many people visit each part of the store, and when?"**
 
 # **Pathr is working to add trajectory classification**
-Presently, Pathr provides its retail customers with a heat-map analysis product that answers the fundamental counting question, **"how many people visit each part of the store, and when?""** Answers to this question are vital for businesses to understand how customers use their store.
+
 
 Meanwhile, Pathr is also working to add the ability to analyze each **individual customer trajectory**, so as to classify a customer's behavior real time. Useful insights from such trajectory analysis include, for example,
 
  * distinguishing customers from staff
- * identifying customers who could use assistance from those who are just browsing
+ * real time identification of customers who could use assistance
+ * revealing precisely how customer store use patterns translate to purchasing behavior
  * detecting shoplifting events as they occur
- * discovering the moments where a customer decides they'd like to make a purchase
 
 
-**Establishing a trajectory classification framework is where my project comes in.**
+However, classifying on raw trajectories is difficult. A generally large obstacle to establishing a functional trajectory analysis product. **Developing such a trajectory classification framework is the focus of my project.**
 
-# **Classifying on raw trajectories is difficult**
+# **What makes classifying trajectories hard**
 
 To restate our high-level goal, given a customer trajectory (a set of ~1000 (x, y, t) rows), we want to  quickly figure out which abstract categories it falls into. Here's why that's difficult.
 
-First, trajectories are not fixed in length. At 30 frames-per-second, we accrue an additional 1,800 points for every minute a person is in the store. From a machine learning perspective, each additional row (x, y, t) acts as an additional 3 dimensions, so dimensionality blows up rapidly. At the same time, we don't know at what scale the important information occurs. Whether it's 10 points or 10,000 points, the scale of interest will vary across different types of behaviors, as will the signal-to-noise ratio. **Our desired classification sorting needs to remain stable across different sample window sizes.**
+First, trajectories are not fixed in length. At 30 frames-per-second, each trajectory accrues an additional 1,800 points for every minute a person is in the store. A staff member, for example, working for 2-hours would result in 100,000 points, nearly a gigabyte of data. From a machine learning perspective, each additional row (x, y, t) acts as an additional 3 dimensions, so dimensionality increases dramatically. At the same time, we don't know _a priori_ over what time- or space-scales the important information occurs. Whether it's 10 points or 10,000 points, the scale of interest will vary across different types of behaviors, as will the signal-to-noise ratio. **Our desired classification behavior should remain stable across different sample window sizes.**
 
 ![pipeline](/images/classifying_metric2.png){: .align-center}
+*How an ideal classification metric should separate trajectories.*
 
 
 
-Second, customer behaviors of interest often live deep below a lot of unrelated information and noise. For instance, how much does a trajectory's absolute location in the store matter? How much error does the computer vision system introduce? How much do a customer's small side-to-side movements tell us about their macro behaviors? And it varies in information-usefulness whether we measure the absolute distance a customer travels or, instead, the distance-normalized pattern the customer traveled in. There are fluctuating scaling and normalization needs for different behaviors. **We need to be able to capture information contained only in certain segments of each feature, and discard the rest.**
+Second, customer behaviors of interest often live deep below a lot of unrelated information and noise. For instance, how much does a trajectory's absolute location in the store matter? How much error does the computer vision system introduce? How much do a customer's small side-to-side movements tell us about their macro behaviors, or vice versa?
+
+And do we normalize by distance and direction? It apparently varies in information-usefulness whether we measure the absolute distance a customer travels--varying needs for different behaviors. **We need to be able to capture information contained only in abstract, certain segments of each feature.** And discard the raw trajectory data as quickly as possible, because it piles up quickly.
+
+Due to all of this stack of noise, dimension, and variable scales of interest, applying a supervised learning classifier to raw trajectory data doesn't work very well. As a basic test, I applied a random forest model to our raw simulation trajectories (each clipped to a fixed length of 500 points) and I found that the classifier could barely guess better than random.
+
+Likewise at the other end of the abstract-to-concrete spectrum, if you apply a set of hand-selected rules to trajectories, it doesn't classify well either. For example, if you say "If the trajectory velocity spends more than 80% of the time within X velocity range, then assign it Y label," this tends to perform no better than a random guess, since the interesting distinctions arise only in a much higher dimensional space.
 
 
+# **A trajectory embedding to extract identifying information from movement**
 
-
-Due to all of these complications, applying a supervised learning classifier to raw trajectory data doesn't work very well. As a basic test, I applied a random forest model to our raw simulation trajectories (each clipped to a fixed length of 500 points) and I found that the classifier could barely guess better than random.
-
-And at the other end of the abstract-to-concrete spectrum, applying a set of hand-selected rules to trajectories doesn't work well either. For example, if you say "If the trajectory velocity spends more than 80% of the time within X velocity range, then assign it Y label," this usually performs no better than a random guess, since the interesting distinctions arise only in a much higher dimensional space.
-
-
-# **I designed a trajectory embedding to distill important trajectory information**
-
-To convert each trajectory into a form that is meaningful to a classifier, I developed a **trajectory embedding**, which is just a fixed set of roughly 100 metrics, computed on each trajectory. So the classification operation becomes: _first_ we map the trajectory through the embedding (essentially a dimensionality reduction operation), _then_ pass the embedded form to the classifier.
+To convert each trajectory into a form that is meaningful to a classifier, I developed a **trajectory embedding**, which is just a fixed set of roughly 50 metrics, computed on each trajectory. So the classification operation becomes: _first_ we map the trajectory through the embedding (essentially a dimensionality reduction operation), _then_ pass the embedded form to the classifier.
 
 
 ![pipeline](/images/classifying_metric1.png){: .align-center}
