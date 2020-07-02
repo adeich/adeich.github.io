@@ -24,7 +24,7 @@ These are fundamental questions for anyone looking to run a competitive retail s
 
 As e-commerce websites like Amazon consume the low-margin, high-inventory sales market, the brick-and-mortar retail industry shifts its focus towards high-quality customer experience. How a customer _feels_ about the physical, in-store human interactions has become a primary driver of brick-and-mortar retail profits. For stores to stay competitive today, a store's employees must understand how customers explore and interact with the sales floor.
 
-Until this decade, if you wanted to gather such customer data for your store, you faced a slow and inaccurate process. To estimate the fraction of visiting customers who made a purchase, say, a store would post an employee outside the front door and manually count for hours the number of customers entering the front door--headaches galore.
+Until now, if you wanted to gather such customer data for your store, you faced a slow and inaccurate process. If you want to estimate the fraction of visiting customers who make a purchase, say, a store would post an employee outside the front door and manually count for hours the number of customers entering the front door.
 
 Over the last decade computer vision has been steadily improving in its accuracy and ease of implementation. All the while, virtually all brick-and-mortar sales floors are covered by high-quality security camera footage. And, until 2020, virtually no one has applied AI analysis to their data.
 
@@ -43,7 +43,7 @@ So each trajectory here represents the movement of a single person as a list of 
 
 ![pipeline](/images/classify_single_trajectory.png){: .align-center}
 
-Unlike GPS geospatial data, which is only accurate to ~1 meter, Pathr's system presently achieves centimeter-precision in customer location measurement. This is thanks to the high pixel density of the typical store's security camera system.
+Compared to GPS geospatial data, which is accurate to ~1 meter, Pathr's system presently achieves centimeter-precision in measuring customer location. This is thanks in part to the high pixel density of the typical store's security camera system.
 
 So in actual application, if x and y are floats with units of meters, x and y will contain meaningful position information to a depth of ~5 significant figures. There is a lot of detail in this data!
 
@@ -53,7 +53,7 @@ Presently, Pathr provides its retail customers with a heat-map analysis product 
 # **Pathr is working to add trajectory classification**
 
 
-Meanwhile, Pathr is also working to add the ability to analyze each **individual customer trajectory**, so as to classify a customer's behavior real time. Useful insights from such trajectory analysis include, for example,
+Meanwhile, Pathr is also working to add the ability to analyze each **individual customer trajectory**, so as to classify a customer's behavior in real time. Useful insights from such trajectory analysis include, for example,
 
  * distinguishing customers from staff
  * real time identification of customers who could use assistance
@@ -65,16 +65,18 @@ However, classifying on raw trajectories is difficult. A generally large obstacl
 
 # **What makes classifying trajectories hard**
 
-To restate our high-level goal, given a customer trajectory (a set of ~1000 (x, y, t) rows), we want to  quickly figure out which abstract categories it falls into. Here's why that's difficult.
+To restate our high-level goal, given a customer trajectory (a set of ~1000 (x, y, t) rows), we want to  quickly figure out which abstract categories it falls into. Here's are some of the primary reasons that's difficult.
 
-First, trajectories are not fixed in length. At 30 frames-per-second, each trajectory accrues an additional 1,800 points for every minute a person is in the store. A staff member, for example, working for 2-hours would result in 100,000 points, nearly a gigabyte of data. From a machine learning perspective, each additional row (x, y, t) acts as an additional 3 dimensions, so dimensionality increases dramatically. At the same time, we don't know _a priori_ over what time- or space-scales the important information occurs. Whether it's 10 points or 10,000 points, the scale of interest will vary across different types of behaviors, as will the signal-to-noise ratio. **Our desired classification behavior should remain stable across different sample window sizes.**
+First, trajectories are not fixed in length. At 30 frames-per-second, each trajectory accrues an additional 1,800 points for every minute a person is in the store. A staff member, for example, working for 2-hours, would result in measured trajectory 100,000 points long, nearly a gigabyte of data. In an enormous store with hundreds of employees, performing real time analysis becomes nearly impossible with this much data.
+
+Second, from a machine learning perspective, each additional row (x, y, t) acts as an additional 3 dimensions, so dimensionality increases dramatically. At the same time, we don't know _a priori_ over what time- or space-scales the important information occurs. Whether it's 10 points or 10,000 points, the scale of interest will vary across different types of behaviors, as will the signal-to-noise ratio. **Our desired classification behavior should remain stable across different sample window sizes.**
 
 ![pipeline](/images/classifying_metric2.png){: .align-center}
 *How an ideal classification metric should separate trajectories.*
 
 
 
-Second, customer behaviors of interest often live deep below a lot of unrelated information and noise. For instance, how much does a trajectory's absolute location in the store matter? How much error does the computer vision system introduce? How much do a customer's small side-to-side movements tell us about their macro behaviors, or vice versa?
+Third, customer behaviors of interest often live deep below a lot of unrelated information and noise. For instance, how much does a trajectory's absolute location in the store matter? How much error does the computer vision system introduce? How much do a customer's small side-to-side movements tell us about their macro behaviors, or vice versa?
 
 And do we normalize by distance and direction? It apparently varies in information-usefulness whether we measure the absolute distance a customer travels--varying needs for different behaviors. **We need to be able to capture information contained only in abstract, certain segments of each feature.** And discard the raw trajectory data as quickly as possible, because it piles up quickly.
 
@@ -83,7 +85,7 @@ Due to all of this stack of noise, dimension, and variable scales of interest, a
 Likewise at the other end of the abstract-to-concrete spectrum, if you apply a set of hand-selected rules to trajectories, it doesn't classify well either. For example, if you say "If the trajectory velocity spends more than 80% of the time within X velocity range, then assign it Y label," this tends to perform no better than a random guess, since the interesting distinctions arise only in a much higher dimensional space.
 
 
-# **A trajectory embedding to extract identifying information from movement**
+# **My solution: a trajectory embedding that extracts identifying information from movement**
 
 To convert each trajectory into a form that is meaningful to a classifier, I developed a **trajectory embedding**, which is just a fixed set of roughly 50 metrics, computed on each trajectory. So the classification operation becomes: _first_ we map the trajectory through the embedding (essentially a dimensionality reduction operation), _then_ pass the embedded form to the classifier.
 
@@ -92,8 +94,9 @@ To convert each trajectory into a form that is meaningful to a classifier, I dev
 
 
 
-For my embedding, I focused on statistics that distill kinematic information around various rates of change. I chose the following statistics in particular because, while capturing key movement descriptions, they are independent of the trajectory's length, sample frequency, and starting location:
+For my embedding, I focused on statistics that distill kinematic information around various rates of change. I chose the following statistics in particular because, while capturing key movement descriptions, they are independent of the trajectory's length, sample frequency, and starting location.
 
+**Trajectory metrics that achieved proof-of-concept success:**
 1. mean velocity
 1. standard deviation of velocity
 1. mean acceleration
@@ -117,11 +120,28 @@ Additionally, incorporating future statistics metrics into the set requires no a
 
 # **Proof-of-concept dataset analysis**
 
-My first proof-of-concept test was a set of shape trajectories -- a simulated dataset composed of 100 circles, 100 rectangles, and 100 triangles.
+#### **#1: Shapes Data**
+For an initial proof-of-concept test, Pathr and I began with a set of shape trajectories -- a simulated dataset in which someone is moving in the shape of 100 circles, 100 rectangles, and 100 triangles. While all shapes had the same orientation, they varied by location and scale.
 
-My second proof-of-concept demonstration was a simulated factory floor, with 135 people moving around, with 3 different behavior roles.
+![](/images/classifying_shapes.png)
 
-Insights:
+Wielding the pipeline I described above, over the course of an hour I tried 60+ combinations of different metric functions on this dataset, visually inspecting the quality of separation in the plot shown at right. I also ran a Random Forest classifier with 5-fold cross-validation on each resulting metric set; while optimum classification accuracy wasn't my goal here, it was a useful metric to check how my embedding was doing.
+
+The metric set I settled on achieved a prediction accuracy of 95%, using only the metrics I described above (mean velocity, mean acceleration, etc) + PCA. If I had chosen metrics aimed these shapes's specific qualities, it would have yielded a higher prediction accuracy, but I stuck only with metrics that were broadly transferrable to any kind of motion.
+
+#### **#2: Factory Floor Simulation**
+
+My second proof-of-concept demonstration represented a (simulated) factory floor, with 135 people moving each for 7,500 trajectory points, with 3 different behavior roles that required separation. This dataset was 2.4GB, a good test of my pipeline's memory usage.
+
+![](/images/classifying_factory.png)
+
+With this messier data, I applied the same metric set as with the shapes, and achieved a 75% prediction accuracy: this is a much better-than-random baseline but there's a lot of room for improvement. As you can see in the above plot, there is some clustering by label, but it's not as well separated as with the shapes trajectories.
+
+With my trajectory metric set, there is clearly a lot of room for improvement, as I didn't apply noise filtering or deep learning.
+
+
+
+# **Insights and future directions**
 
 * Grab-bag of kinematics metrics + PCA works pretty well as a start.
 * Initial metric set achieved high classification accuracy.
