@@ -169,8 +169,8 @@ The metric set still needs improvement in order to meaningfully differentiate be
 # **Future directions**
 
 
-After my initial success, there remains wide room for improvement, especially as I didn't apply noise filtering or deep learning.
+After my initial success, there remains wide room for improvement, especially as I didn't yet apply noise filtering or deep learning.
 
-Adding noise filtering is a crucial step in smoothing out human movements and computer vision small errors, but it will require some delicate controls to surface the correct scale of filtering.
+Adding noise filtering is a crucial step in smoothing out human movements and small errors due to computer vision, but it will require delicate controls to surface the correct scale of filtering.
 
-The future work that I'm really excited about is determining metric functions using supervised deep learning, which train on the raw trajectories themselves. The engineering required to allow this step is that trajectories will need to be in some fixed-length form. Ultimately, a combination of human, hand-selected metric functions and deep learned metric functions will probably get the best results.
+The future work that I'm really excited about is deriving abstract embeddings using supervised deep learning, which would train on the raw trajectories themselves. Ultimately, a combination of human, hand-selected metric functions and deep learned metric functions will probably get the best results.
