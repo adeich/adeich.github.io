@@ -9,7 +9,7 @@ thumb: "images/classifying_thumb.png"
 excerpt: "Consulting for Pathr.ai, I developed a method for separating spatial trajectories of brick-and-mortar retail stores by customer behavior."
 ---
 
-For my Insight project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr uses computer vision to help brick-and-mortar businesses understand how people move through their physical space. To allow Pathr to begin to **classify customer spatial movements**, I developed a set of **trajectory metrics** and an accompanying trajectory analysis pipeline.
+For my [Insight](https://insightfellows.com/data-science) project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr uses computer vision to help brick-and-mortar businesses understand how people move through their physical space. To allow Pathr to begin to **classify customer spatial movements**, I developed a set of **trajectory metrics** and an accompanying trajectory analysis pipeline.
 
 
 ![](images/classifying_timelapse.jpeg)
@@ -60,13 +60,13 @@ Meanwhile, Pathr is also working to add the ability to analyze each **individual
  * detecting shoplifting events as they occur
 
 
-However, classifying on raw trajectories is difficult; a important obstacle to establishing a functional trajectory analysis product. **Developing such a trajectory classification framework is the focus of my project.**
+However, classifying on raw trajectories is difficult; this proving to be a big obstacle to establishing a functional trajectory analysis product. **Developing such a trajectory classification framework is the focus of my project.**
 
 # **What makes classifying trajectories hard**
 
-To restate our high-level goal, given a customer trajectory (a set of ~1000 (x, y, t) rows), we want to  quickly figure out which abstract categories it falls into. Here's are some of the primary reasons that's difficult.
+To restate our high-level goal, given a customer trajectory (a set of ~1000 (x, y, t) rows), we want to  quickly figure out which abstract categories the customer movement falls into. Here's are some of the primary reasons that's difficult.
 
-First, trajectories are not fixed in length. At 30 frames-per-second, each trajectory accrues an additional 1,800 points for every minute a person is in the store. A staff member, for example, working for 2-hours, would result in measured trajectory 100,000 points long, approximately 1 gigabyte of data. In an enormous store with hundreds of employees and customers, performing real time analysis becomes nearly impossible at this scale.
+First, trajectories are not fixed in length. At 30 frames-per-second, each trajectory accrues an additional 1,800 points for every minute a person is in the store. A staff member, for example, working for 2-hours, would result in measured trajectory 100,000 points long, approximately 1 GB of data. In an enormous store with hundreds of employees and customers, performing real time analysis becomes nearly impossible at this scale.
 
 Second, from a machine learning perspective, each additional point (x, y, t) adds an additional 3 dimensions; dimensionality increases dramatically with time. Meanwhile, we don't know _a priori_ over what time- or space-scales the important information occurs. Whether it's 10 points or 10,000 points, the scale of interest will vary across different types of behaviors, as will the signal-to-noise ratio. **Our desired classification behavior should remain stable across different sample window sizes.**
 
@@ -79,7 +79,7 @@ Third, customer behaviors of interest often live deep below a lot of unrelated i
 
 These questions do not have simple answers; especially not on the raw trajectory data itself.
 
-In short, **we need to project windows of each trajectory into a lower dimensional space that captures its key information.** And we need to then discard the raw trajectory data quickly to keep our memory use minimal. What follows is how I went about optimizing this projection to maximally distill information.
+In short, **we need to map subsets of each customer trajectory into a lower dimensional space in a way that captures its key information.** And we need to then discard the raw trajectory data quickly to keep our memory use minimal. What follows is how I went about optimizing this projection to maximally distill information.
 
 
 # **I developed a trajectory embedding that extracts identifying information from movement**
@@ -137,7 +137,7 @@ With this messier factory data, I applied the same metric set as with the shapes
 
 # **An abstract distance metric**
 
-Pathr additionally asked for a distance metric between any two trajectories, one that can express with a single number how 'close' two trajectories are by category. Especially useful for low-computing cost classification.
+Pathr additionally asked for a distance metric between any two trajectories, one that can express with a single number how 'close' two trajectories are by category. Especially useful for low-computing-cost classification.
 
 I applied a euclidean distance metric to the embedded data to show how far apart each trajectory was. The euclidean distance between two vectors is just an $$N$$-dimensional generalized Pythagorean distance:
 
