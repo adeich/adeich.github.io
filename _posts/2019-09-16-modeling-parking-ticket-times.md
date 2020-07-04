@@ -44,7 +44,7 @@ Further, even in cases where the PEV is driving without a fixed route (the drive
 Let's illustrate what these two extremes of PEV-visit noisiness look like:
 
 {% capture notice-2 %}
-**Perfectly periodic** visits over a 120-minute window (mean period $$\mu = 12$$):
+**Perfectly periodic** visits over a 120-minute window (mean period $$\mu = 12)$$:
 
 ![CDF for long times](/images/parking_periodic.png 'title'){: .align-center}
 {% endcapture %}
