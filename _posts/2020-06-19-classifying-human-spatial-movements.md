@@ -9,8 +9,7 @@ thumb: "images/classifying_thumb.png"
 excerpt: "Consulting for Pathr.ai, I developed a method for separating spatial trajectories of brick-and-mortar retail stores by customer behavior."
 ---
 
-For my Insight project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr uses computer vision to help brick-and-mortar businesses understand how people move through their physical space. To allow Pathr to begin to **classify customer spatial movements**, I developed a set of **trajectory metrics** and an accompanying trajectory analysis pipeline which achieved a separation of simulation trajectories by type. 
-
+For my Insight project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr uses computer vision to help brick-and-mortar businesses understand how people move through their physical space. To allow Pathr to begin to **classify customer spatial movements**, I developed a set of **trajectory metrics** and an accompanying trajectory analysis pipeline.
 
 
 ![](images/classifying_timelapse.jpeg)
