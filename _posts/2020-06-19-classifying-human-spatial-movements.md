@@ -45,12 +45,10 @@ So each trajectory here represents the movement of a single person as a list of 
 
 ![pipeline](/images/classify_single_trajectory.png){: .align-center}
 
-Compared to GPS geospatial data, which is accurate to ~1 meter, Pathr's system presently achieves centimeter-precision in measuring customer location. This is thanks in part to the high pixel density of the typical store's security camera system.
-
-So in actual application, if x and y are floats with units of meters, x and y will contain meaningful position information to a depth of ~5 significant figures. There is a lot of detail in this data!
+Compared to GPS geospatial data, which is accurate to ~1 meter, Pathr's system presently achieves centimeter-precision in measuring customer location. This is thanks in part to the high pixel density of the typical store's security camera system. So in actual application, if x and y are floats with units of meters, x and y will contain meaningful position information to a depth of ~3 decimal points. There is a lot of detail in this data!
 
 
-Presently, Pathr provides its retail customers with a heat-map analysis product that answers a manager's fundamental counting question, **"how many people visited each part of the store, and when?"**
+Presently, Pathr provides its retail customers with a heat-map analysis product that answers a retailer's fundamental counting question, **"how many people visited each part of the store, and when?"**
 
 # **Pathr is working to add trajectory classification**
 
@@ -63,7 +61,7 @@ Meanwhile, Pathr is also working to add the ability to analyze each **individual
  * detecting shoplifting events as they occur
 
 
-However, classifying on raw trajectories is difficult. A generally large obstacle to establishing a functional trajectory analysis product. **Developing such a trajectory classification framework is the focus of my project.**
+However, classifying on raw trajectories is difficult; a important obstacle to establishing a functional trajectory analysis product. **Developing such a trajectory classification framework is the focus of my project.**
 
 # **What makes classifying trajectories hard**
 
@@ -78,16 +76,14 @@ Second, from a machine learning perspective, each additional point (x, y, t) add
 
 
 
-Third, customer behaviors of interest often live deep below a lot of unrelated information and noise. For instance, how much does a trajectory's absolute location in the store matter? How much error does the computer vision system introduce? How much do a customer's small side-to-side movements tell us about their macro behaviors, or vice versa?
+Third, customer behaviors of interest often live deep below a lot of unrelated information and noise. For instance, how much does a trajectory's absolute location in the store matter? At what scale does the computer vision introduce error? How much do a customer's small side-to-side movements tell us about their macro behaviors, or vice versa?
 
-Along these lines come ambiguities in normalization: do we normalize by distance and direction? There is apparent variation in information-usefulness whether we measure the absolute distance a customer travels--varying needs for different behaviors. In short, **we need to be able to capture information contained only in abstract, certain segments of each feature.** And to discard the raw trajectory data as quickly as possible, because it piles up quickly.
+These questions do not have simple answers; especially not on the raw trajectory data itself.
 
-To summarize, with the accumulation of the aforementioned effects of noise, curse of dimension, and variable scales of interest, applying a supervised learning classifier to raw trajectory data doesn't work very well. As a basic test, I applied a random forest model to our raw simulation trajectories (each clipped to a fixed length of 500 points) and I found that the classifier could barely guess better than random.
-
-Likewise at the other end of the abstract-to-concrete spectrum, if you apply a set of hand-selected rules to trajectories, it doesn't classify well either. For example, if you say "If the trajectory velocity spends more than 80% of the time within X velocity range, then assign it Y label," this tends to perform no better than a random guess, since the interesting distinctions arise only in a much higher dimensional space.
+In short, **we need to project windows of each trajectory into a lower dimensional space that captures its key information.** And we need to then discard the raw trajectory data quickly to keep our memory use minimal. What follows is how I went about optimizing this projection to maximally distill information.
 
 
-# **I developed trajectory embedding that extracts identifying information from movement**
+# **I developed a trajectory embedding that extracts identifying information from movement**
 
 To convert each trajectory into a form that is meaningful to a classifier, I developed a **trajectory embedding**, which is just a fixed set of roughly 50 metrics, computed over a specified sample window. So the classification operation becomes: _first_ we map the trajectory through the embedding (essentially a dimensionality reduction operation), _then_ pass the embedded form to the classifier.
 
@@ -157,7 +153,7 @@ The metric set still needs improvement in order to meaningfully differentiate be
 
 
 
-# **Key takeaways for Pathr**
+# **Key takeaways from my work**
 
 1. The ability to quickly try combinations of metric functions is crucial for finding a practical trajectory metric set; in other words, hardcoding a pipeline around some fixed functions will be inevitably unwieldy.
 1. My starting grab-bag of rates-of-change kinematics metrics + PCA works pretty well! It will serve as a good benchmark, going forward.
