@@ -17,6 +17,12 @@ $bottom-border-color: #e6ecf5;
     background: $header-background-color;
     // Positioning context for the mobile navigation icon
     position: relative;
+    @include media-query($on-laptop) {
+      width: $content-width;
+    }
+    @include media-query($on-palm) {
+      width: $content-width;
+    }
 
 }
 
@@ -45,6 +51,7 @@ $bottom-border-color: #e6ecf5;
 .site-header .wrapper {
 	padding-top: 20px;
 	position: relative;
+
 }
 
 .site-nav ul li a {

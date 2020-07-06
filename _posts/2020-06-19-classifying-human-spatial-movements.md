@@ -77,9 +77,11 @@ Second, from a machine learning perspective, each additional point (x, y, t) add
 
 Third, customer behaviors of interest often live deep below a lot of unrelated information and noise. For instance, how much does a trajectory's absolute location in the store matter? At what scale does the computer vision introduce error? How much do a customer's small side-to-side movements tell us about their macro behaviors, or vice versa?
 
-These questions do not have simple answers; especially not on the raw trajectory data itself.
+These questions do not have simple or consistent answers; especially not on the raw trajectory data itself.
 
-In short, **we need to map subsets of each customer trajectory into a lower dimensional space in a way that captures its key information.** And we need to then discard the raw trajectory data quickly to keep our memory use minimal. What follows is how I went about optimizing this projection to maximally distill information.
+In short, **we need to map each customer trajectory into a lower dimensional space in a way that captures its key information.** And we need to limit our sample size to small, sliding time windows, in order to discard the memory-dense, raw trajectory data as quickly as possible.
+
+What follows is how I went about optimizing this mapping so as to maximally distill movement information.
 
 
 # **I developed a trajectory embedding that extracts identifying information from movement**
