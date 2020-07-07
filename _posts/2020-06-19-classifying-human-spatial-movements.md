@@ -52,7 +52,7 @@ Presently, Pathr provides its retail customers with a heat-map analysis product 
 # **Pathr is working to add trajectory classification**
 
 
-Meanwhile, Pathr is also working to add the ability to analyze each **individual customer trajectory**, so as to classify a customer's behavior in real time. Useful insights from such trajectory analysis include, for example,
+Meanwhile, Pathr is also working to add the ability to analyze each **individual customer trajectory**, so as to classify a customer's behavior in real time. Useful insights from such trajectory analysis include:
 
  * distinguishing customers from staff
  * real time identification of customers who could use assistance
@@ -60,13 +60,13 @@ Meanwhile, Pathr is also working to add the ability to analyze each **individual
  * detecting shoplifting events as they occur
 
 
-However, classifying on raw trajectories is difficult; this proving to be a big obstacle to establishing a functional trajectory analysis product. **Developing such a trajectory classification framework is the focus of my project.**
+However, classifying on raw trajectories is difficult; this is proving to be an obstacle to establishing a functional trajectory analysis product. **Developing such a trajectory classification framework is the focus of my project.**
 
 # **What makes classifying trajectories hard**
 
-To restate our high-level goal, given a customer trajectory (a set of ~1000 (x, y, t) rows), we want to  quickly figure out which abstract categories the customer movement falls into. Here's are some of the primary reasons that's difficult.
+Let's restate our high-level goal: given a customer trajectory (a set of ~1000 $$(\mathrm{x}, \mathrm{y}, \mathrm{t})$$ rows), we need to quickly figure out which abstract categories the customer movement falls into. Here's are some of the primary reasons that's not an easy operation.
 
-First, trajectories are not fixed in length. At 30 frames-per-second, each trajectory accrues an additional 1,800 points for every minute a person is in the store. A staff member, for example, working for 2-hours, would result in measured trajectory 100,000 points long, approximately 1 GB of data. In an enormous store with hundreds of employees and customers, performing real time analysis becomes nearly impossible at this scale.
+First, trajectories vary by length to an extreme. At 30 frames-per-second, each trajectory accrues an additional 1,800 points for every minute a person is in the store. A staff member, for example, working for 2 hours, would result in measured trajectory 100,000 points long, approximately 1 GB in a richly annotated data format. In a big store with hundreds of employees and customers, performing real time analysis becomes increasingly difficult. **We have to keep our stored data as light as possible.**
 
 Second, from a machine learning perspective, each additional point (x, y, t) adds an additional 3 dimensions; dimensionality increases dramatically with time. Meanwhile, we don't know _a priori_ over what time- or space-scales the important information occurs. Whether it's 10 points or 10,000 points, the scale of interest will vary across different types of behaviors, as will the signal-to-noise ratio. **Our desired classification behavior should remain stable across different sample window sizes.**
 
@@ -113,7 +113,7 @@ To address this, I built a **trajectory embedding pipeline** that applies an ope
 
 ![pipeline](/images/classify_pipeline.png){: .align-center}
 
-The pipeline, which utilizes efficient array operations from `Pandas` and `numpy`, can process about 100MB of trajectory data into a metric set in about 30-seconds on my older laptop. I was able to try 60+ combinations drawn from 15 statistics functions in a few hours, arriving at the function set I listed, above.
+The pipeline, which utilizes efficient array operations from `Pandas` and `numpy`, can process about 100MB of trajectory data into a metric set in about 30 seconds on my older laptop. I was able to try 60+ combinations drawn from 15 statistics functions in a few hours, arriving at the function set I listed, above.
 
 Additionally, I built the pipeline such that if you want to incorporate an additional metric function into the set, it requires no extra pipeline engineering: it's just a matter of defining a new function and adding its name to the list.
 
@@ -135,7 +135,7 @@ My second proof-of-concept dataset represented a (simulated) factory floor, with
 
 ![](/images/classifying_factory.png)
 
-With this messier factory data, I applied the same metric set as with the shapes, and achieved a 78% prediction accuracy: this is a much better-than-random baseline but there's still much room for improvement. As you can see in the above plot, there is some clustering by label, but it's not as well separated as with the shapes trajectories.
+With this messier factory data, I applied the same metric set as with the shapes, and achieved a 78% prediction accuracy: this is a much better-than-random baseline but there's still room for improvement. As you can see in the above plot, there is some clustering by label, but it's not as well separated as with the shapes trajectories.
 
 # **An abstract distance metric**
 
@@ -156,9 +156,9 @@ The metric set still needs improvement in order to meaningfully differentiate be
 
 # **Key takeaways from my work**
 
-1. The ability to quickly try combinations of metric functions is crucial for finding a practical trajectory metric set; in other words, hardcoding a pipeline around some fixed functions will be inevitably unwieldy.
+1. The ability to quickly try combinations of metric functions is crucial for finding a practical trajectory metric set; in other words, hardcoding a pipeline around some fixed functions will inevitably make for slower progress.
 1. My starting grab-bag of rates-of-change kinematics metrics + PCA works pretty well! It will serve as a good benchmark, going forward.
-1. Training on actual, hand-labeled human data will be key for pushing further. It seems very likely that Pathr's simulation data is not capturing certain intrinsic and eccentric human movements.
+1. Training on actual, hand-labeled human data will be key for pushing further. It seems very likely that Pathr's simulation data, while currently doing a great job at adding randomness, is not capturing certain intrinsic and eccentric human movements.
 
 
 
