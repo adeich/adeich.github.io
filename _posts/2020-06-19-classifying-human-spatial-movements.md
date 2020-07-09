@@ -79,7 +79,7 @@ Third, customer behaviors of interest often live deep below a lot of unrelated i
 
 These questions do not have simple or consistent answers; especially not on the raw trajectory data itself.
 
-In short, **we need to map each customer trajectory into a lower dimensional space in a way that captures its key information.** And we need to limit our sample size to small, sliding time windows, in order to discard the memory-dense, raw trajectory data as quickly as possible.
+In short, **we need to map each trajectory into a low-dimensional space in a way that captures the key information.** And we need to limit our sample size to small, sliding time windows in order to discard the memory-dense, raw trajectory data as quickly as possible.
 
 What follows is how I went about optimizing this mapping so as to maximally distill movement information.
 
@@ -125,9 +125,9 @@ For an initial proof-of-concept test, Pathr and I began with a set of shape traj
 
 ![](/images/classifying_shapes.png)
 
-With the pipeline I described above, over the course of an hour I tried 60+ combinations of different metric functions on this dataset, visually inspecting the quality of separation in the plot shown at right. In parallel, I used a Random Forest classifier with 5-fold cross-validation on each resulting metric set; while optimum classification accuracy wasn't my goal here, it was a useful extra metric by which to check the practicality of the clustering.
+With the pipeline I described above, I developed my metric functions described above, visually inspecting the quality of separation in the plot shown at right. In parallel, I used a Random Forest classifier with 5-fold cross-validation on each resulting metric set—while optimum classification accuracy wasn't my goal here, it was a useful extra metric by which to check the practicality of the clustering.
 
-The metric set I settled on achieved a proof-of-concept prediction accuracy of 94%, using only the metrics I described above (mean velocity, mean acceleration, etc) + PCA. I stuck only with metrics that were broadly transferrable to any kind of motion.
+I achieved a proof-of-concept prediction accuracy of 95%, using only the metrics described above (mean velocity, mean acceleration, etc) + PCA. I stuck only with metrics that were broadly transferrable to any kind of motion.
 
 #### **Dataset 2: Factory Floor Simulation**
 
@@ -135,7 +135,7 @@ My second proof-of-concept dataset represented a (simulated) factory floor, with
 
 ![](/images/classifying_factory.png)
 
-With this messier factory data, I applied the same metric set as with the shapes, and achieved a 78% prediction accuracy: this is a much better-than-random baseline but there's still room for improvement. As you can see in the above plot, there is some clustering by label, but it's not as well separated as with the shapes trajectories.
+With this messier factory data, I applied the same metric set as with the shapes, and achieved a 78% prediction accuracy: this is a much better-than-random baseline, to be improved upon in the future; the classifier was scoring only around 50% prediction accuracy on the raw trajectories. As you can see in the above plot, there is some clustering by label, but it's not as well separated as with the shapes trajectories.
 
 # **An abstract distance metric**
 
