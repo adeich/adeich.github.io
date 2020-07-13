@@ -3,7 +3,7 @@
 // Define defaults for each variable.
 @import url(//db.onlinewebfonts.com/c/0e70b3a23ddb2c7338b99c8c4396a0d1?family=ITC+Charter);
 $base-font-family: "ITC Charter Regular", "Times New Roman", Times, serif;
-$base-font-size:   19px !default;
+$base-font-size:   20px !default;
 $base-font-weight: 400 !default;
 $small-font-size:  $base-font-size * 0.875 !default;
 $base-line-height: 1.5 !default;
@@ -21,10 +21,10 @@ $grey-color-dark:  darken($grey-color, 25%) !default;
 $table-text-align: left !default;
 
 // Width of the content area
-$content-width:    600px !default;
+$content-width:    650px !default;
 
 $on-palm:          300px !default;
-$on-laptop:        500px !default;
+$on-laptop:        650px !default;
 
 // Use media queries like this:
 // @include media-query($on-palm) {
