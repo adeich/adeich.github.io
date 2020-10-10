@@ -9,7 +9,7 @@ thumb: "images/classifying_thumb.png"
 excerpt: "Consulting for Pathr.ai, I developed a method for separating spatial trajectories of brick-and-mortar retail stores by customer behavior."
 ---
 
-For my [Insight](https://insightfellows.com/data-science) project I collaborated with [Pathr.ai](https://pathr.ai/), a start up based in Mountain View. Pathr uses computer vision to help brick-and-mortar businesses understand how people move through their physical space. To allow Pathr to begin to **classify customer spatial movements**, I developed a set of **trajectory metrics** and an accompanying trajectory analysis pipeline.
+For my [Insight](https://insightfellows.com/data-science) project I collaborated with [Pathr.ai](https://pathr.ai/), a startup based in Mountain View. Pathr uses computer vision to help brick-and-mortar businesses understand how people move through their physical space. To allow Pathr to begin to **classify customer spatial movements**, I developed a set of **trajectory metrics** and an accompanying trajectory analysis pipeline.
 
 
 ![](images/classifying_timelapse.jpeg)
@@ -19,11 +19,11 @@ For my [Insight](https://insightfellows.com/data-science) project I collaborated
 
 How many customers visit each part of the sales floor, and when? At what point do customers change their minds and decide to make a purchase? Which types of customer-staff interactions lead to higher store profits?
 
-These are fundamental questions for anyone looking to run a competitive retail store today.
+These are questions of fundamental importance for staying profitable in high-end brick-and-mortar retail.
 
-As e-commerce websites like Amazon consume the low-margin, high-inventory sales market, the brick-and-mortar retail industry shifts its focus towards high-quality customer experience. How a customer _feels_ about the physical, in-store human interactions has become a primary driver of brick-and-mortar retail profits. For stores to stay competitive today, a store's employees must understand how customers explore and interact with the sales floor.
+Because e-commerce websites (mainly Amazon) have consumed the low-margin, high-inventory sales market, the brick-and-mortar retail industry has had to increasingly attract customers via a polished shopping experience. How a customer _feels_ about the physical, in-store human interactions has become a core product in itself, and a primary driver of brick-and-mortar retail profits. To stay competitive in this way, a store's employees need a high-level view into how customers explore and interact with the sales floor.
 
-Until now, if you wanted to gather such customer data for your store, you faced a slow and inaccurate process. To estimate the fraction of visiting customers who make a purchase, say, you'd post someone outside the front door and manually count for hours the number of customers entering the store. An inaccurate headache, to say the least.
+Until now, if you wanted to gather such customer data for your store, you faced a slow and inaccurate process. To learn what fraction of visitors make a purchase, say, you'd post someone outside the front door and manually count for hours the number of customers entering the store, then compare this record to the day's sales data. An inaccurate headache, to say the least.
 
 And for decades, virtually all brick-and-mortar sales floors have been covered by high-quality security camera feeds. Until 2020, virtually none have applied AI analysis to their data. Recent advances in computer vision is finally making this possible.
 
